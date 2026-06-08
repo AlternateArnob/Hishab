@@ -1,0 +1,207 @@
+/* ============================================================
+   HISHAB ERP — layout.css
+   Sidebar, topbar, main content shell
+   ============================================================ */
+
+/* ── App Shell ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--text);   /* dark sidebar */
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: transform var(--t-slow);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-logo {
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex; align-items: center; gap: .6rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.sidebar-logo .logo-mark {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: var(--brand); display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .9rem; color: #fff; flex-shrink: 0;
+}
+.sidebar-logo .logo-text {
+  font-size: 1.05rem; font-weight: 600; color: #fff; letter-spacing: -.01em;
+}
+.sidebar-logo .logo-sub {
+  font-size: .65rem; color: rgba(255,255,255,.4); letter-spacing: .05em; text-transform: uppercase;
+}
+
+.sidebar-nav {
+  flex: 1; padding: .75rem 0;
+}
+
+.nav-section-label {
+  padding: .75rem 1.25rem .3rem;
+  font-size: .65rem; font-weight: 600;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .6rem 1.25rem;
+  color: rgba(255,255,255,.6);
+  font-size: .875rem; font-weight: 400;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background var(--t), color var(--t), border-color var(--t);
+  text-decoration: none;
+  user-select: none;
+}
+.nav-item svg { flex-shrink: 0; opacity: .7; transition: opacity var(--t); }
+.nav-item:hover {
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.9);
+  text-decoration: none;
+}
+.nav-item:hover svg { opacity: 1; }
+.nav-item.active {
+  background: rgba(37,99,235,.2);
+  color: #fff;
+  border-left-color: var(--brand);
+  font-weight: 500;
+}
+.nav-item.active svg { opacity: 1; }
+
+.sidebar-footer {
+  padding: .75rem 1rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.sidebar-user {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .5rem .25rem; cursor: pointer; border-radius: var(--radius-sm);
+  transition: background var(--t);
+}
+.sidebar-user:hover { background: rgba(255,255,255,.06); }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 600; flex-shrink: 0;
+}
+.user-info { overflow: hidden; }
+.user-name  { font-size: .8rem; font-weight: 500; color: #fff; }
+.user-role  { font-size: .7rem; color: rgba(255,255,255,.4); text-transform: capitalize; }
+
+/* ── Topbar ── */
+.topbar {
+  position: fixed;
+  top: 0; left: var(--sidebar-w); right: 0;
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 1.5rem; gap: 1rem;
+  z-index: 90;
+}
+
+.topbar-title {
+  font-size: 1rem; font-weight: 600; color: var(--text);
+}
+.topbar-breadcrumb {
+  font-size: .8rem; color: var(--text-3);
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex; align-items: center; gap: .75rem;
+}
+
+.topbar-search {
+  position: relative;
+}
+.topbar-search svg {
+  position: absolute; left: .65rem; top: 50%;
+  transform: translateY(-50%); color: var(--text-3); pointer-events: none;
+}
+.topbar-search input {
+  padding: .4rem .75rem .4rem 2rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-family: inherit; font-size: .825rem; color: var(--text);
+  background: var(--surface-2); outline: none; width: 200px;
+  transition: border-color var(--t), width var(--t);
+}
+.topbar-search input:focus {
+  border-color: var(--brand);
+  background: var(--surface);
+  width: 260px;
+}
+
+.notif-btn {
+  position: relative; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-2); cursor: pointer;
+  transition: background var(--t);
+}
+.notif-btn:hover { background: var(--surface-2); }
+.notif-badge {
+  position: absolute; top: 5px; right: 5px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red); border: 2px solid var(--surface);
+}
+
+/* ── Main content area ── */
+.main-content {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--topbar-h);
+  flex: 1;
+  padding: 1.75rem;
+  min-width: 0;
+}
+
+/* ── Mobile overlay ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 99;
+}
+
+/* ── Mobile responsive ── */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.show {
+    display: block;
+  }
+  .topbar {
+    left: 0;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+  .hamburger {
+    display: flex !important;
+  }
+}
+
+.hamburger {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); cursor: pointer; color: var(--text-2);
+  flex-shrink: 0;
+}

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM — Hishab ERP</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">H</div>
+      <div><div class="logo-text">Hishab</div><div class="logo-sub">ERP Platform</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="nav-section-label">Modules</div>
+      <a class="nav-item active" href="crm.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        CRM
+      </a>
+      <a class="nav-item" href="sales.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sales
+      </a>
+      <a class="nav-item" href="inventory.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Inventory
+      </a>
+      <a class="nav-item" href="accounting.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Accounting
+      </a>
+      <a class="nav-item" href="analytics.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
+        Analytics
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="logout()">
+        <div class="user-avatar" id="sidebar-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin</div>
+          <div class="user-role" id="sidebar-user-role">admin</div>
+        </div>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" viewBox="0 0 24 24" style="margin-left:auto;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="hamburger" onclick="openSidebar()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div>
+      <div class="topbar-title">CRM</div>
+      <div class="topbar-breadcrumb">Customers &amp; Leads</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="openCustomerModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Customer
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Stats -->
+    <div class="stat-grid" id="crm-stats">
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="card">
+      <div class="card-header">
+        <h3 id="table-title">All Customers</h3>
+        <div class="flex gap-2 items-center">
+          <div class="search-bar">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="form-control" type="text" id="search-input" placeholder="Search customers…" style="width:200px" />
+          </div>
+          <select class="form-control" id="status-filter" style="width:130px">
+            <option value="">All Status</option>
+            <option value="lead">Lead</option>
+            <option value="prospect">Prospect</option>
+            <option value="customer">Customer</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="border:none;border-radius:0">
+        <table id="crm-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Source</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="crm-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:2rem"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:.75rem 1rem" id="crm-pagination"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Customer detail panel -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-panel-header">
+    <h3 id="detail-name">Customer</h3>
+    <button class="btn-icon" onclick="closeDetail()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="detail-panel-body" id="detail-body"></div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+requireAuth();
+populateSidebarUser();
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
+let state = { page: 1, limit: 15, search: '', status: '' };
+
+// ── Load stats ────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const { data } = await api.crm.stats();
+    document.getElementById('crm-stats').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total</div>
+        <div class="stat-value">${data.total}</div>
+        <div class="stat-sub">All contacts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Leads</div>
+        <div class="stat-value" style="color:var(--yellow)">${data.leads}</div>
+        <div class="stat-sub">Potential pipeline</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Prospects</div>
+        <div class="stat-value" style="color:var(--brand)">${data.prospects}</div>
+        <div class="stat-sub">In discussion</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Customers</div>
+        <div class="stat-value" style="color:var(--green)">${data.customers}</div>
+        <div class="stat-sub">Active clients</div>
+      </div>`;
+  } catch(e) { console.error(e); }
+}
+
+// ── Load table ────────────────────────────────────────────────
+async function loadCustomers() {
+  const q = buildQuery({ status: state.status, search: state.search, page: state.page, limit: state.limit });
+  try {
+    const res = await api.crm.list(q);
+    renderTable(res.data);
+    renderPagination(document.getElementById('crm-pagination'), res.total, state.page, state.limit, p => { state.page = p; loadCustomers(); });
+    document.getElementById('table-title').textContent = `All Customers (${res.total})`;
+  } catch(e) {
+    document.getElementById('crm-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--red)">Failed to load</td></tr>`;
+  }
+}
+
+function renderTable(rows) {
+  const tbody = document.getElementById('crm-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No customers found</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(c => `
+    <tr style="cursor:pointer" onclick="openDetail(${c.id})">
+      <td>
+        <div class="flex items-center gap-2">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--brand);flex-shrink:0">${c.name[0].toUpperCase()}</div>
+          <div>
+            <div class="font-500">${c.name}</div>
+            <div class="text-xs text-3">${c.email || ''}</div>
+          </div>
+        </div>
+      </td>
+      <td class="text-sm">${c.company || '—'}</td>
+      <td class="text-sm">${c.phone || '—'}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td class="text-sm text-2">${c.source || '—'}</td>
+      <td class="text-sm text-3">${formatDate(c.created_at)}</td>
+      <td>
+        <div class="flex gap-1">
+          <button class="btn-icon" title="Edit" onclick="event.stopPropagation();openCustomerModal(${c.id})">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn-icon" title="Delete" onclick="event.stopPropagation();deleteCustomer(${c.id},'${c.name.replace(/'/g,"\\'")}')">
+            <svg width="14" height="14" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ── Detail panel ──────────────────────────────────────────────
+async function openDetail(id) {
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('detail-body').innerHTML = `<div class="spinner"></div>`;
+  try {
+    const { data, activities } = await api.crm.get(id);
+    document.getElementById('detail-name').textContent = data.name;
+    document.getElementById('detail-body').innerHTML = `
+      <div class="card" style="border:none;box-shadow:none;padding:0">
+        <div class="flex flex-col gap-3">
+          ${field('Email', data.email || '—')}
+          ${field('Phone', data.phone || '—')}
+          ${field('Company', data.company || '—')}
+          ${field('Status', statusBadge(data.status))}
+          ${field('Source', data.source || '—')}
+          ${field('Assigned To', data.assigned_name || '—')}
+          ${field('Address', data.address || '—')}
+          ${data.notes ? field('Notes', `<span style="white-space:pre-wrap">${data.notes}</span>`) : ''}
+        </div>
+      </div>
+      <hr class="divider"/>
+      <div>
+        <div class="flex justify-between items-center" style="margin-bottom:.75rem">
+          <h3 style="font-size:.9rem">Activity Log</h3>
+          <button class="btn btn-secondary btn-sm" onclick="openActivityModal(${data.id})">+ Log</button>
+        </div>
+        <div class="activity-timeline">
+          ${activities.length ? activities.map(a => `
+            <div class="activity-item">
+              <div class="activity-dot">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+              <div class="activity-content">
+                <div class="activity-type">${a.type}</div>
+                <div class="activity-desc">${a.description}</div>
+                <div class="activity-meta">${a.user_name} · ${timeAgo(a.activity_date)}</div>
+              </div>
+            </div>`).join('') : `<p class="text-sm text-3">No activities yet</p>`}
+        </div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('detail-body').innerHTML = `<p class="text-sm" style="color:var(--red)">Failed to load</p>`;
+  }
+}
+
+function field(label, value) {
+  return `<div><div class="text-xs text-3 font-600" style="text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem">${label}</div><div class="text-sm">${value}</div></div>`;
+}
+
+function closeDetail() { document.getElementById('detail-panel').classList.remove('open'); }
+
+// ── Add/Edit modal ────────────────────────────────────────────
+async function openCustomerModal(id = null) {
+  let customer = null;
+  if (id) {
+    try { const r = await api.crm.get(id); customer = r.data; } catch(e) {}
+  }
+  const c = customer || {};
+  const html = `
+    <div class="modal-header">
+      <h2>${id ? 'Edit Customer' : 'Add Customer'}</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Name *</label>
+          <input class="form-control" id="f-name" value="${c.name||''}" placeholder="Full name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company</label>
+          <input class="form-control" id="f-company" value="${c.company||''}" placeholder="Company name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-control" id="f-email" type="email" value="${c.email||''}" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-control" id="f-phone" value="${c.phone||''}" placeholder="+880..." />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-control" id="f-status">
+            ${['lead','prospect','customer','inactive'].map(s => `<option value="${s}" ${c.status===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Source</label>
+          <select class="form-control" id="f-source">
+            ${['walk-in','referral','online','cold-call','other'].map(s => `<option value="${s}" ${c.source===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Address</label>
+        <input class="form-control" id="f-address" value="${c.address||''}" placeholder="Address" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" id="f-notes" placeholder="Internal notes…">${c.notes||''}</textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-customer-btn" onclick="saveCustomer(${id||'null'})">
+        ${id ? 'Save Changes' : 'Add Customer'}
+      </button>
+    </div>`;
+  openModal(html, { large: true });
+}
+
+async function saveCustomer(id) {
+  const btn = document.getElementById('save-customer-btn');
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast('Name is required', 'error'); return; }
+  const data = {
+    name, company: document.getElementById('f-company').value,
+    email: document.getElementById('f-email').value,
+    phone: document.getElementById('f-phone').value,
+    status: document.getElementById('f-status').value,
+    source: document.getElementById('f-source').value,
+    address: document.getElementById('f-address').value,
+    notes: document.getElementById('f-notes').value,
+  };
+  btnLoading(btn, true);
+  try {
+    if (id) { await api.crm.update(id, data); toast('Customer updated', 'success'); }
+    else    { await api.crm.create(data);     toast('Customer added', 'success'); }
+    closeModal(); loadCustomers(); loadStats();
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+async function deleteCustomer(id, name) {
+  confirmDialog(`Delete <strong>${name}</strong>? This cannot be undone.`, async () => {
+    try { await api.crm.delete(id); toast('Customer deleted', 'success'); loadCustomers(); loadStats(); }
+    catch(e) { toast(e.message, 'error'); }
+  }, { title: 'Delete Customer', danger: true, confirmText: 'Delete' });
+}
+
+// ── Activity modal ────────────────────────────────────────────
+function openActivityModal(customerId) {
+  const html = `
+    <div class="modal-header">
+      <h2>Log Activity</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-control" id="a-type">
+          ${['call','email','meeting','note','follow-up'].map(t => `<option value="${t}">${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <textarea class="form-control" id="a-desc" placeholder="What happened…" style="min-height:100px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-activity-btn" onclick="saveActivity(${customerId})">Log Activity</button>
+    </div>`;
+  openModal(html);
+}
+
+async function saveActivity(customerId) {
+  const btn = document.getElementById('save-activity-btn');
+  const type = document.getElementById('a-type').value;
+  const description = document.getElementById('a-desc').value.trim();
+  if (!description) { toast('Description is required', 'error'); return; }
+  btnLoading(btn, true);
+  try {
+    await api.crm.addActivity(customerId, { type, description });
+    toast('Activity logged', 'success');
+    closeModal();
+    openDetail(customerId);
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+// ── Search & filter ───────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input', debounce(e => {
+  state.search = e.target.value; state.page = 1; loadCustomers();
+}));
+document.getElementById('status-filter').addEventListener('change', e => {
+  state.status = e.target.value; state.page = 1; loadCustomers();
+});
+
+// ── Init ──────────────────────────────────────────────────────
+loadStats();
+loadCustomers();
+</script>
+</body>
+</html>
