@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales — Hishab ERP</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">H</div>
+      <div><div class="logo-text">Hishab</div><div class="logo-sub">ERP Platform</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="nav-section-label">Modules</div>
+      <a class="nav-item" href="crm.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        CRM
+      </a>
+      <a class="nav-item active" href="sales.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sales
+      </a>
+      <a class="nav-item" href="inventory.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Inventory
+      </a>
+      <a class="nav-item" href="accounting.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Accounting
+      </a>
+      <a class="nav-item" href="analytics.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
+        Analytics
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="logout()">
+        <div class="user-avatar" id="sidebar-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin</div>
+          <div class="user-role" id="sidebar-user-role">admin</div>
+        </div>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" viewBox="0 0 24 24" style="margin-left:auto;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="hamburger" onclick="openSidebar()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div>
+      <div class="topbar-title">Sales</div>
+      <div class="topbar-breadcrumb">Orders &amp; Invoices</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="openNewOrderModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Order
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Stats -->
+    <div class="stat-grid" id="sales-stats">
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Tabs: Orders / Invoices -->
+    <div class="tabs" id="sales-tabs">
+      <button class="tab-btn active" onclick="switchTab('orders', this)">Orders</button>
+      <button class="tab-btn" onclick="switchTab('invoices', this)">Invoices</button>
+    </div>
+
+    <!-- Orders tab -->
+    <div class="tab-pane active" id="tab-orders">
+      <div class="card">
+        <div class="card-header">
+          <h3 id="orders-title">All Orders</h3>
+          <div class="flex gap-2 items-center flex-wrap">
+            <div class="search-bar">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="form-control" type="text" id="order-search" placeholder="Search order #…" style="width:180px" />
+            </div>
+            <select class="form-control" id="order-status-filter" style="width:130px">
+              <option value="">All Status</option>
+              <option value="draft">Draft</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0">
+          <table>
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="7" style="text-align:center;padding:2rem"><div class="spinner"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:.75rem 1rem" id="orders-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Invoices tab -->
+    <div class="tab-pane" id="tab-invoices">
+      <div class="card">
+        <div class="card-header">
+          <h3 id="invoices-title">All Invoices</h3>
+          <select class="form-control" id="invoice-status-filter" style="width:130px">
+            <option value="">All Status</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="partial">Partial</option>
+            <option value="paid">Paid</option>
+            <option value="overdue">Overdue</option>
+          </select>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Amount Due</th>
+                <th>Paid</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="invoices-tbody">
+              <tr><td colspan="9" style="text-align:center;padding:2rem"><div class="spinner"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:.75rem 1rem" id="invoices-pagination"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Order detail panel -->
+<div class="detail-panel" id="detail-panel">
+  <div class="detail-panel-header">
+    <h3 id="detail-order-num">Order</h3>
+    <div class="flex gap-2 items-center">
+      <div id="detail-status-badge"></div>
+      <button class="btn-icon" onclick="closeDetail()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="detail-panel-body" id="detail-body"></div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+requireAuth();
+populateSidebarUser();
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
+let ordersState   = { page: 1, limit: 15, search: '', status: '' };
+let invoicesState = { page: 1, limit: 15, status: '' };
+let cachedProducts   = [];
+let cachedCustomers  = [];
+
+// ── Tabs ─────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'invoices') loadInvoices();
+}
+
+// ── Stats ─────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const { data } = await api.sales.stats();
+    document.getElementById('sales-stats').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">${data.total_orders || 0}</div>
+        <div class="stat-sub">${data.confirmed || 0} confirmed · ${data.draft || 0} draft</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" style="color:var(--brand)">${formatCurrency(data.total_revenue || 0)}</div>
+        <div class="stat-sub">From non-cancelled orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Outstanding</div>
+        <div class="stat-value" style="color:var(--yellow)">${formatCurrency((data.total_due || 0) - (data.total_paid || 0))}</div>
+        <div class="stat-sub">${data.overdue_count || 0} overdue invoices</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Delivered</div>
+        <div class="stat-value" style="color:var(--green)">${data.delivered || 0}</div>
+        <div class="stat-sub">${data.cancelled || 0} cancelled</div>
+      </div>`;
+  } catch(e) { console.error(e); }
+}
+
+// ── Orders ────────────────────────────────────────────────────
+async function loadOrders() {
+  const q = buildQuery({ status: ordersState.status, search: ordersState.search, page: ordersState.page, limit: ordersState.limit });
+  try {
+    const res = await api.sales.list(q);
+    renderOrders(res.data);
+    renderPagination(document.getElementById('orders-pagination'), res.total, ordersState.page, ordersState.limit,
+      p => { ordersState.page = p; loadOrders(); });
+    document.getElementById('orders-title').textContent = `All Orders (${res.total})`;
+  } catch(e) {
+    document.getElementById('orders-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--red)">Failed to load</td></tr>`;
+  }
+}
+
+function renderOrders(rows) {
+  const tbody = document.getElementById('orders-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><p>No orders found</p><button class="btn btn-primary btn-sm" onclick="openNewOrderModal()">Create First Order</button></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(o => `
+    <tr style="cursor:pointer" onclick="openOrderDetail(${o.id})">
+      <td><span class="font-500" style="color:var(--brand)">${o.order_number}</span></td>
+      <td class="text-sm">${o.customer_name || '<span class="text-3">Walk-in</span>'}</td>
+      <td class="text-sm text-2">${formatDate(o.order_date)}</td>
+      <td class="text-sm text-2">${o.item_count || '—'}</td>
+      <td class="font-500">${formatCurrency(o.total)}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>
+        <div class="flex gap-1">
+          ${o.status === 'draft' ? `
+            <button class="btn btn-primary btn-sm" title="Confirm order" onclick="event.stopPropagation();confirmOrder(${o.id},'${o.order_number}')">Confirm</button>
+            <button class="btn btn-danger btn-sm" title="Cancel" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
+          ` : ''}
+          ${o.status === 'confirmed' ? `
+            <button class="btn btn-secondary btn-sm" title="Cancel" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
+          ` : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ── Order detail panel ────────────────────────────────────────
+async function openOrderDetail(id) {
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('detail-body').innerHTML = `<div class="spinner"></div>`;
+  document.getElementById('detail-order-num').textContent = 'Loading…';
+  document.getElementById('detail-status-badge').innerHTML = '';
+  try {
+    const { data, items, invoices } = await api.sales.get(id);
+    document.getElementById('detail-order-num').textContent = data.order_number;
+    document.getElementById('detail-status-badge').innerHTML = statusBadge(data.status);
+
+    const invHtml = invoices.length ? invoices.map(inv => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem .8rem;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:.5rem">
+        <div>
+          <div class="font-500 text-sm">${inv.invoice_number}</div>
+          <div class="text-xs text-3">Due ${formatDate(inv.due_date)}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          ${statusBadge(inv.status)}
+          ${inv.status !== 'paid' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${inv.amount_due - inv.amount_paid})">Pay</button>` : ''}
+        </div>
+      </div>`).join('') : `<p class="text-sm text-3">No invoice yet — confirm the order to generate one.</p>`;
+
+    document.getElementById('detail-body').innerHTML = `
+      <div class="flex flex-col gap-3">
+        ${detailField('Customer', data.customer_name || 'Walk-in customer')}
+        ${data.customer_email ? detailField('Email', data.customer_email) : ''}
+        ${data.customer_phone ? detailField('Phone', data.customer_phone) : ''}
+        ${detailField('Order Date', formatDate(data.order_date))}
+        ${data.delivery_date ? detailField('Delivery Date', formatDate(data.delivery_date)) : ''}
+        ${data.notes ? detailField('Notes', data.notes) : ''}
+      </div>
+      <hr class="divider"/>
+      <div>
+        <h3 style="font-size:.9rem;margin-bottom:.75rem">Order Items</h3>
+        <table style="width:100%;font-size:.82rem;border-collapse:collapse">
+          <thead>
+            <tr style="background:var(--surface-2)">
+              <th style="padding:.4rem .6rem;text-align:left;font-size:.72rem;color:var(--text-2)">Product</th>
+              <th style="padding:.4rem .6rem;text-align:right;font-size:.72rem;color:var(--text-2)">Qty</th>
+              <th style="padding:.4rem .6rem;text-align:right;font-size:.72rem;color:var(--text-2)">Price</th>
+              <th style="padding:.4rem .6rem;text-align:right;font-size:.72rem;color:var(--text-2)">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(i => `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.5rem .6rem">
+                  <div class="font-500">${i.product_name}</div>
+                  <div class="text-xs text-3">${i.sku}</div>
+                </td>
+                <td style="padding:.5rem .6rem;text-align:right">${i.qty}</td>
+                <td style="padding:.5rem .6rem;text-align:right">${formatCurrency(i.unit_price)}</td>
+                <td style="padding:.5rem .6rem;text-align:right;font-weight:500">${formatCurrency(i.total)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;padding:.75rem .6rem 0;font-size:.85rem">
+          <div class="flex gap-4"><span class="text-3">Subtotal</span><span>${formatCurrency(data.subtotal)}</span></div>
+          ${data.discount > 0 ? `<div class="flex gap-4"><span class="text-3">Discount</span><span style="color:var(--green)">- ${formatCurrency(data.discount)}</span></div>` : ''}
+          ${data.tax > 0 ? `<div class="flex gap-4"><span class="text-3">Tax</span><span>${formatCurrency(data.tax)}</span></div>` : ''}
+          <div class="flex gap-4" style="font-size:.95rem;font-weight:600;padding-top:.3rem;border-top:1px solid var(--border);margin-top:.2rem">
+            <span>Total</span><span style="color:var(--brand)">${formatCurrency(data.total)}</span>
+          </div>
+        </div>
+      </div>
+      <hr class="divider"/>
+      <div>
+        <h3 style="font-size:.9rem;margin-bottom:.75rem">Invoice</h3>
+        ${invHtml}
+      </div>
+      ${data.status === 'draft' ? `
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn btn-primary" style="flex:1" onclick="confirmOrder(${data.id},'${data.order_number}')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Confirm Order
+          </button>
+          <button class="btn btn-danger" style="flex:1" onclick="cancelOrder(${data.id},'${data.order_number}')">Cancel</button>
+        </div>` : ''}`;
+  } catch(e) {
+    document.getElementById('detail-body').innerHTML = `<p class="text-sm" style="color:var(--red)">Failed to load order.</p>`;
+  }
+}
+
+function detailField(label, value) {
+  return `<div><div class="text-xs text-3 font-600" style="text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem">${label}</div><div class="text-sm">${value}</div></div>`;
+}
+function closeDetail() { document.getElementById('detail-panel').classList.remove('open'); }
+
+// ── Confirm / Cancel order ────────────────────────────────────
+async function confirmOrder(id, num) {
+  confirmDialog(`Confirm order <strong>${num}</strong>? This will deduct inventory and generate an invoice.`, async () => {
+    try {
+      await api.sales.confirm(id);
+      toast(`Order ${num} confirmed`, 'success');
+      loadOrders(); loadStats();
+      if (document.getElementById('detail-panel').classList.contains('open')) openOrderDetail(id);
+    } catch(e) { toast(e.message, 'error'); }
+  }, { title: 'Confirm Order', confirmText: 'Confirm' });
+}
+
+async function cancelOrder(id, num) {
+  confirmDialog(`Cancel order <strong>${num}</strong>?`, async () => {
+    try {
+      await api.sales.cancel(id);
+      toast(`Order ${num} cancelled`, 'success');
+      loadOrders(); loadStats();
+      closeDetail();
+    } catch(e) { toast(e.message, 'error'); }
+  }, { title: 'Cancel Order', danger: true, confirmText: 'Cancel Order' });
+}
+
+// ── Payment modal ─────────────────────────────────────────────
+function openPaymentModal(invoiceId, invoiceNum, outstanding) {
+  const today = new Date().toISOString().split('T')[0];
+  const html = `
+    <div class="modal-header">
+      <h2>Record Payment — ${invoiceNum}</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Amount *</label>
+          <input class="form-control" id="pay-amount" type="number" step="0.01" min="0.01" value="${outstanding.toFixed(2)}" />
+          <span class="form-hint">Outstanding: ${formatCurrency(outstanding)}</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Date *</label>
+          <input class="form-control" id="pay-date" type="date" value="${today}" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Method</label>
+        <select class="form-control" id="pay-method">
+          <option value="cash">Cash</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="mobile_banking">Mobile Banking</option>
+          <option value="cheque">Cheque</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <input class="form-control" id="pay-note" placeholder="Optional note…" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-payment-btn" onclick="savePayment(${invoiceId})">Record Payment</button>
+    </div>`;
+  openModal(html);
+}
+
+async function savePayment(invoiceId) {
+  const btn = document.getElementById('save-payment-btn');
+  const amount = parseFloat(document.getElementById('pay-amount').value);
+  const payment_date = document.getElementById('pay-date').value;
+  if (!amount || amount <= 0) { toast('Enter a valid amount', 'error'); return; }
+  if (!payment_date)          { toast('Payment date required', 'error'); return; }
+  btnLoading(btn, true);
+  try {
+    await api.accounting.recordPayment({
+      invoice_id: invoiceId,
+      amount, payment_date,
+      method: document.getElementById('pay-method').value,
+      note:   document.getElementById('pay-note').value,
+    });
+    toast('Payment recorded', 'success');
+    closeModal();
+    loadInvoices(); loadStats();
+    // Refresh detail panel if open
+    const panel = document.getElementById('detail-panel');
+    if (panel.classList.contains('open')) {
+      const num = document.getElementById('detail-order-num').textContent;
+      // Re-open by searching current order
+      loadOrders();
+    }
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+// ── Invoices ──────────────────────────────────────────────────
+async function loadInvoices() {
+  const q = buildQuery({ status: invoicesState.status, page: invoicesState.page, limit: invoicesState.limit });
+  try {
+    const res = await api.sales.invoices(q);
+    renderInvoices(res.data);
+    renderPagination(document.getElementById('invoices-pagination'), res.total, invoicesState.page, invoicesState.limit,
+      p => { invoicesState.page = p; loadInvoices(); });
+    document.getElementById('invoices-title').textContent = `All Invoices (${res.total})`;
+  } catch(e) {
+    document.getElementById('invoices-tbody').innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--red)">Failed to load</td></tr>`;
+  }
+}
+
+function renderInvoices(rows) {
+  const tbody = document.getElementById('invoices-tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><p>No invoices yet</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(inv => {
+    const remaining = inv.amount_due - inv.amount_paid;
+    return `
+      <tr>
+        <td><span class="font-500" style="color:var(--brand)">${inv.invoice_number}</span></td>
+        <td class="text-sm">${inv.order_number || '—'}</td>
+        <td class="text-sm">${inv.customer_name || 'Walk-in'}</td>
+        <td class="text-sm text-2">${formatDate(inv.issue_date)}</td>
+        <td class="text-sm text-2">${formatDate(inv.due_date)}</td>
+        <td class="font-500">${formatCurrency(inv.amount_due)}</td>
+        <td class="text-sm" style="color:var(--green)">${formatCurrency(inv.amount_paid)}</td>
+        <td>${statusBadge(inv.status)}</td>
+        <td>
+          ${inv.status !== 'paid' && inv.status !== 'cancelled' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${remaining})">Pay</button>` : ''}
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ── New Order Modal ───────────────────────────────────────────
+let orderItems = [];
+
+async function openNewOrderModal() {
+  // Pre-fetch customers and products in parallel
+  try {
+    const [cRes, pRes] = await Promise.all([
+      api.crm.list('?limit=200'),
+      api.inventory.list('?limit=200'),
+    ]);
+    cachedCustomers = cRes.data || [];
+    cachedProducts  = pRes.data || [];
+  } catch(e) {
+    toast('Failed to load customers/products', 'error'); return;
+  }
+
+  orderItems = [];
+  const today = new Date().toISOString().split('T')[0];
+
+  const html = `
+    <div class="modal-header">
+      <h2>New Sales Order</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Customer</label>
+          <select class="form-control" id="o-customer">
+            <option value="">Walk-in / No customer</option>
+            ${cachedCustomers.map(c => `<option value="${c.id}">${c.name}${c.company ? ' — ' + c.company : ''}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Order Date *</label>
+          <input class="form-control" id="o-date" type="date" value="${today}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Delivery Date</label>
+          <input class="form-control" id="o-delivery" type="date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <input class="form-control" id="o-notes" placeholder="Optional notes…" />
+        </div>
+      </div>
+
+      <hr class="divider" style="margin:.5rem 0"/>
+
+      <!-- Line items -->
+      <div class="flex justify-between items-center" style="margin-bottom:.6rem">
+        <h3 style="font-size:.9rem">Order Items</h3>
+        <button class="btn btn-secondary btn-sm" onclick="addOrderItem()">+ Add Item</button>
+      </div>
+      <div id="order-items-list"></div>
+
+      <hr class="divider" style="margin:.5rem 0"/>
+
+      <!-- Discount / Tax / Total -->
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Discount (৳)</label>
+          <input class="form-control" id="o-discount" type="number" step="0.01" min="0" value="0" oninput="recalcOrderTotal()" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tax (৳)</label>
+          <input class="form-control" id="o-tax" type="number" step="0.01" min="0" value="0" oninput="recalcOrderTotal()" />
+        </div>
+      </div>
+      <div id="order-total-display" style="text-align:right;padding:.5rem 0;font-size:.9rem;color:var(--text-3)">
+        Add items to see total
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-order-btn" onclick="saveOrder()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Order
+      </button>
+    </div>`;
+  openModal(html, { large: true });
+  addOrderItem(); // start with one empty row
+}
+
+function addOrderItem() {
+  const idx = orderItems.length;
+  orderItems.push({ product_id: '', qty: 1, unit_price: 0, discount: 0 });
+  renderOrderItems();
+}
+
+function removeOrderItem(idx) {
+  orderItems.splice(idx, 1);
+  renderOrderItems();
+  recalcOrderTotal();
+}
+
+function renderOrderItems() {
+  const el = document.getElementById('order-items-list');
+  if (!orderItems.length) {
+    el.innerHTML = `<p class="text-sm text-3" style="padding:.5rem 0">No items added. Click "+ Add Item".</p>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="order-items-table" style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+        <thead>
+          <tr style="background:var(--surface-2)">
+            <th style="padding:.4rem .5rem;text-align:left;font-size:.72rem;color:var(--text-2);font-weight:600">Product</th>
+            <th style="padding:.4rem .5rem;text-align:right;font-size:.72rem;color:var(--text-2);font-weight:600;width:70px">Qty</th>
+            <th style="padding:.4rem .5rem;text-align:right;font-size:.72rem;color:var(--text-2);font-weight:600;width:110px">Unit Price</th>
+            <th style="padding:.4rem .5rem;text-align:right;font-size:.72rem;color:var(--text-2);font-weight:600;width:90px">Disc (৳)</th>
+            <th style="padding:.4rem .5rem;text-align:right;font-size:.72rem;color:var(--text-2);font-weight:600;width:100px">Line Total</th>
+            <th style="width:36px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orderItems.map((item, i) => {
+            const lineTotal = (item.qty * item.unit_price) - item.discount;
+            return `
+              <tr style="border-bottom:1px solid var(--border)">
+                <td style="padding:.4rem .5rem">
+                  <select class="form-control" style="font-size:.82rem;padding:.35rem .5rem" onchange="onProductSelect(${i}, this.value)">
+                    <option value="">Select product…</option>
+                    ${cachedProducts.map(p => `<option value="${p.id}" data-price="${p.selling_price}" data-stock="${p.stock_qty}" ${item.product_id == p.id ? 'selected' : ''}>${p.name} (${p.stock_qty} ${p.unit})</option>`).join('')}
+                  </select>
+                </td>
+                <td style="padding:.4rem .5rem">
+                  <input class="form-control" style="font-size:.82rem;padding:.35rem .5rem;text-align:right;width:64px" type="number" min="0.01" step="any"
+                    value="${item.qty}" onchange="onItemChange(${i},'qty',this.value)" />
+                </td>
+                <td style="padding:.4rem .5rem">
+                  <input class="form-control" style="font-size:.82rem;padding:.35rem .5rem;text-align:right;width:100px" type="number" min="0" step="0.01"
+                    value="${item.unit_price}" onchange="onItemChange(${i},'unit_price',this.value)" />
+                </td>
+                <td style="padding:.4rem .5rem">
+                  <input class="form-control" style="font-size:.82rem;padding:.35rem .5rem;text-align:right;width:80px" type="number" min="0" step="0.01"
+                    value="${item.discount}" onchange="onItemChange(${i},'discount',this.value)" />
+                </td>
+                <td style="padding:.4rem .5rem;text-align:right;font-weight:500">${formatCurrency(lineTotal > 0 ? lineTotal : 0)}</td>
+                <td style="padding:.4rem .5rem">
+                  <button class="btn-icon" style="width:28px;height:28px;border-color:transparent" onclick="removeOrderItem(${i})" title="Remove">
+                    <svg width="13" height="13" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function onProductSelect(idx, productId) {
+  const product = cachedProducts.find(p => p.id == productId);
+  orderItems[idx].product_id = productId;
+  orderItems[idx].unit_price = product ? parseFloat(product.selling_price) : 0;
+  renderOrderItems();
+  recalcOrderTotal();
+}
+
+function onItemChange(idx, field, value) {
+  orderItems[idx][field] = parseFloat(value) || 0;
+  recalcOrderTotal();
+  // Re-render just the line total cell would be ideal but a full re-render is safe
+  renderOrderItems();
+}
+
+function recalcOrderTotal() {
+  const discount = parseFloat(document.getElementById('o-discount')?.value) || 0;
+  const tax      = parseFloat(document.getElementById('o-tax')?.value)      || 0;
+  let subtotal = 0;
+  for (const item of orderItems) {
+    subtotal += (item.qty * item.unit_price) - item.discount;
+  }
+  const total = subtotal - discount + tax;
+  const el = document.getElementById('order-total-display');
+  if (el) el.innerHTML = `
+    <div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:.2rem">
+      <div style="font-size:.82rem;color:var(--text-3)">Subtotal: ${formatCurrency(subtotal)}</div>
+      ${discount > 0 ? `<div style="font-size:.82rem;color:var(--green)">Discount: - ${formatCurrency(discount)}</div>` : ''}
+      ${tax > 0 ? `<div style="font-size:.82rem;color:var(--text-3)">Tax: ${formatCurrency(tax)}</div>` : ''}
+      <div style="font-size:1rem;font-weight:600;color:var(--brand);border-top:1px solid var(--border);padding-top:.3rem;margin-top:.1rem">Total: ${formatCurrency(total)}</div>
+    </div>`;
+}
+
+async function saveOrder() {
+  const btn = document.getElementById('save-order-btn');
+
+  const order_date = document.getElementById('o-date').value;
+  if (!order_date) { toast('Order date is required', 'error'); return; }
+
+  const validItems = orderItems.filter(i => i.product_id && i.qty > 0);
+  if (!validItems.length) { toast('Add at least one item', 'error'); return; }
+
+  const payload = {
+    customer_id:   document.getElementById('o-customer').value || null,
+    order_date,
+    delivery_date: document.getElementById('o-delivery').value || null,
+    notes:         document.getElementById('o-notes').value,
+    discount:      parseFloat(document.getElementById('o-discount').value) || 0,
+    tax:           parseFloat(document.getElementById('o-tax').value) || 0,
+    items:         validItems,
+  };
+
+  btnLoading(btn, true);
+  try {
+    const res = await api.sales.create(payload);
+    toast(`Order ${res.order_number} created`, 'success');
+    closeModal();
+    loadOrders(); loadStats();
+    openOrderDetail(res.id);
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+// ── Filters ───────────────────────────────────────────────────
+document.getElementById('order-search').addEventListener('input', debounce(e => {
+  ordersState.search = e.target.value; ordersState.page = 1; loadOrders();
+}));
+document.getElementById('order-status-filter').addEventListener('change', e => {
+  ordersState.status = e.target.value; ordersState.page = 1; loadOrders();
+});
+document.getElementById('invoice-status-filter').addEventListener('change', e => {
+  invoicesState.status = e.target.value; invoicesState.page = 1; loadInvoices();
+});
+
+// ── Init ──────────────────────────────────────────────────────
+loadStats();
+loadOrders();
+</script>
+</body>
+</html>
