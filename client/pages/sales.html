@@ -36,16 +36,15 @@
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         Inventory
       </a>
-      <a class="nav-item" href="accounting.html">
+      <a class="nav-item" href="accounting.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         Accounting
       </a>
-      <a class="nav-item" href="analytics.html">
+      <a class="nav-item" href="analytics.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
         Analytics
       </a>
-      <div class="nav-section-label">Admin</div>
-      <a class="nav-item" href="users.html">
+      <a class="nav-item" href="users.html" data-role="admin">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
         Users
       </a>
@@ -197,6 +196,8 @@
 <script>
 requireAuth();
 populateSidebarUser();
+  // Apply staff read-only banner
+  if (isStaff()) showStaffReadOnlyBanner('You have read-only access. Confirming, cancelling orders and recording payments require manager or admin access.');
 function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
 
@@ -272,12 +273,12 @@ function renderOrders(rows) {
       <td>${statusBadge(o.status)}</td>
       <td>
         <div class="flex gap-1">
-          ${o.status === 'draft' ? `
+          ${isAdminOrManager() && o.status === 'draft' ? `
             <button class="btn btn-primary btn-sm" title="Confirm order" onclick="event.stopPropagation();confirmOrder(${o.id},'${o.order_number}')">Confirm</button>
-            <button class="btn btn-danger btn-sm" title="Cancel" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
+            <button class="btn btn-danger btn-sm" title="Cancel" data-role="admin,manager" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
           ` : ''}
           ${o.status === 'confirmed' ? `
-            <button class="btn btn-secondary btn-sm" title="Cancel" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
+            <button class="btn btn-secondary btn-sm" title="Cancel" data-role="admin,manager" onclick="event.stopPropagation();cancelOrder(${o.id},'${o.order_number}')">Cancel</button>
           ` : ''}
         </div>
       </td>
@@ -303,7 +304,7 @@ async function openOrderDetail(id) {
         </div>
         <div class="flex items-center gap-2">
           ${statusBadge(inv.status)}
-          ${inv.status !== 'paid' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${inv.amount_due - inv.amount_paid})">Pay</button>` : ''}
+          ${isAdminOrManager() && inv.status !== 'paid' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${inv.amount_due - inv.amount_paid})">Pay</button>` : ''}
         </div>
       </div>`).join('') : `<p class="text-sm text-3">No invoice yet — confirm the order to generate one.</p>`;
 
@@ -355,7 +356,7 @@ async function openOrderDetail(id) {
         <h3 style="font-size:.9rem;margin-bottom:.75rem">Invoice</h3>
         ${invHtml}
       </div>
-      ${data.status === 'draft' ? `
+      ${isAdminOrManager() && data.status === 'draft' ? `
         <div class="flex gap-2 flex-wrap">
           <button class="btn btn-primary" style="flex:1" onclick="confirmOrder(${data.id},'${data.order_number}')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -386,6 +387,7 @@ async function confirmOrder(id, num) {
 }
 
 async function cancelOrder(id, num) {
+  if (!isAdminOrManager()) { toast('Only managers and admins can cancel orders', 'error'); return; }
   confirmDialog(`Cancel order <strong>${num}</strong>?`, async () => {
     try {
       await api.sales.cancel(id);
@@ -498,7 +500,7 @@ function renderInvoices(rows) {
         <td class="text-sm" style="color:var(--green)">${formatCurrency(inv.amount_paid)}</td>
         <td>${statusBadge(inv.status)}</td>
         <td>
-          ${inv.status !== 'paid' && inv.status !== 'cancelled' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${remaining})">Pay</button>` : ''}
+          ${isAdminOrManager() && inv.status !== 'paid' && inv.status !== 'cancelled' ? `<button class="btn btn-primary btn-sm" onclick="openPaymentModal(${inv.id},'${inv.invoice_number}',${remaining})">Pay</button>` : ''}
         </td>
       </tr>`;
   }).join('');

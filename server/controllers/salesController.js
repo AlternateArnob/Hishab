@@ -147,18 +147,27 @@ exports.confirm = async (req, res) => {
     // Create invoice
     const invoice_number = await nextInvoiceNumber();
     const due_date = new Date(); due_date.setDate(due_date.getDate() + 30);
-    const [[invoiceResult]] = await conn.query(
-      `INSERT INTO invoices (invoice_number, order_id, customer_id, status, issue_date, due_date, amount_due, created_by)
-       VALUES (?, ?, ?, 'unpaid', NOW(), ?, ?, ?)`,
-      [invoice_number, order.id, order.customer_id, due_date.toISOString().split('T')[0], order.total, req.user.id]
-    );
+    // ── Fix 1: correct INSERT result destructuring ──
+const [invoiceResult] = await conn.query(          // ← single destructure, not double
+  `INSERT INTO invoices (invoice_number, order_id, customer_id, status, issue_date, due_date, amount_due, created_by)
+   VALUES (?, ?, ?, 'unpaid', NOW(), ?, ?, ?)`,
+  [invoice_number, order.id, order.customer_id, due_date.toISOString().split('T')[0], order.total, req.user.id]
+);
 
     // Accounting entry: income
-    await conn.query(
-      `INSERT INTO transactions (reference, type, account_id, amount, description, transaction_date, invoice_id, created_by)
-       VALUES (?, 'income', (SELECT id FROM accounts WHERE code = '4001'), ?, ?, NOW(), ?, ?)`,
-      [order.order_number, order.total, `Sales revenue: ${order.order_number}`, invoiceResult?.insertId || null, req.user.id]
-    );
+const [[account]] = await conn.query(
+  `SELECT id FROM accounts WHERE code = '4001' LIMIT 1`
+);
+if (!account) {
+  await conn.rollback();
+  return res.status(500).json({ success: false, message: 'Accounting account 4001 not found. Please seed your chart of accounts.' });
+}
+
+await conn.query(
+  `INSERT INTO transactions (reference, type, account_id, amount, description, transaction_date, invoice_id, created_by)
+   VALUES (?, 'income', ?, ?, ?, NOW(), ?, ?)`,   // ← account_id as param, not subquery
+  [order.order_number, account.id, order.total, `Sales revenue: ${order.order_number}`, invoiceResult.insertId || null, req.user.id]
+);
 
     await conn.commit();
     return res.json({ success: true, message: 'Order confirmed, invoice and accounting entries created', invoice_number });

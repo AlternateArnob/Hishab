@@ -11,7 +11,6 @@
 <body>
 <div class="app-shell">
 
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="logo-mark">H</div>
@@ -36,16 +35,16 @@
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         Inventory
       </a>
-      <a class="nav-item" href="accounting.html">
+      <a class="nav-item" href="accounting.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         Accounting
       </a>
-      <a class="nav-item" href="analytics.html">
+      <a class="nav-item" href="analytics.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
         Analytics
       </a>
-      <div class="nav-section-label">Admin</div>
-      <a class="nav-item active" href="users.html">
+      <div class="nav-section-label" data-role="admin,manager">Admin</div>
+      <a class="nav-item active" href="users.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
         Users
       </a>
@@ -63,7 +62,6 @@
   </aside>
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-  <!-- Topbar -->
   <header class="topbar">
     <button class="hamburger" onclick="openSidebar()">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -72,27 +70,23 @@
       <div class="topbar-title">Users</div>
       <div class="topbar-breadcrumb">Team &amp; Access Control</div>
     </div>
-    <div class="topbar-actions" id="topbar-actions">
-      <!-- Add User button shown only for admin — injected after auth -->
-    </div>
+    <div class="topbar-actions" id="topbar-actions"></div>
   </header>
 
   <main class="main-content">
 
-    <!-- Access guard banner -->
-    <div id="access-guard" class="hidden" style="background:var(--yellow-bg);border:1px solid var(--yellow-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem">
-      <svg width="18" height="18" fill="none" stroke="var(--yellow)" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <span class="text-sm">You have read-only access to this page. Only admins can create or manage users.</span>
+    <!-- Manager read-only banner -->
+    <div id="manager-banner" class="hidden" style="display:none;align-items:center;gap:.65rem;background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--text-2)">
+      <svg width="15" height="15" fill="none" stroke="var(--yellow)" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      You have read-only access. Only admins can create or manage users.
     </div>
 
-    <!-- Stat cards -->
     <div class="stat-grid" id="user-stats">
       <div class="stat-card"><div class="spinner"></div></div>
       <div class="stat-card"><div class="spinner"></div></div>
       <div class="stat-card"><div class="spinner"></div></div>
     </div>
 
-    <!-- User table -->
     <div class="card">
       <div class="card-header">
         <h3 id="user-table-title">Team Members</h3>
@@ -106,7 +100,7 @@
               <th>Role</th>
               <th>Joined</th>
               <th>Status</th>
-              <th id="actions-col"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="users-tbody">
@@ -123,65 +117,72 @@
 <script src="../assets/js/ui.js"></script>
 <script src="../assets/js/auth.js"></script>
 <script>
-requireAuth();
+requireRole('admin', 'manager');
 populateSidebarUser();
 function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
 
 let currentUser = null;
-let allUsers = [];
+let allUsers    = [];
 
 async function init() {
   try {
-    const { data } = await api.me();
-    currentUser = data;
+    const res = await api.me();
+    currentUser = res.user || res.data;
+  } catch(e) { return; }
 
-    if (currentUser.role === 'admin') {
-      document.getElementById('topbar-actions').innerHTML = `
-        <button class="btn btn-primary btn-sm" onclick="openUserModal()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add User
-        </button>`;
-    } else {
-      document.getElementById('access-guard').classList.remove('hidden');
-    }
-  } catch(e) {}
+  if (currentUser.role === 'admin') {
+    document.getElementById('topbar-actions').innerHTML = `
+      <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add User
+      </button>`;
+  } else {
+    // Manager: show read-only banner
+    const b = document.getElementById('manager-banner');
+    b.style.display = 'flex';
+  }
+
   loadUsers();
 }
 
 async function loadUsers() {
   try {
-    const { data } = await api.users();
-    allUsers = data;
-    renderUsers(data);
-
-    const admins   = data.filter(u => u.role === 'admin').length;
-    const managers = data.filter(u => u.role === 'manager').length;
-    const staff    = data.filter(u => u.role === 'staff').length;
-    document.getElementById('user-stats').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-label">Total Users</div>
-        <div class="stat-value">${data.length}</div>
-        <div class="stat-sub">Team members</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Admins</div>
-        <div class="stat-value" style="color:var(--purple)">${admins}</div>
-        <div class="stat-sub">${managers} managers · ${staff} staff</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Active</div>
-        <div class="stat-value" style="color:var(--green)">${data.filter(u => u.is_active !== false).length}</div>
-        <div class="stat-sub">Out of ${data.length} total</div>
-      </div>`;
-    document.getElementById('user-table-title').textContent = `Team Members (${data.length})`;
+    const res = await api.users();
+    allUsers = res.data;
+    renderStats(allUsers);
+    renderUsers(allUsers);
+    document.getElementById('user-table-title').textContent = `Team Members (${allUsers.length})`;
   } catch(e) {
-    document.getElementById('users-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red)">Failed to load users</td></tr>`;
+    document.getElementById('users-tbody').innerHTML =
+      `<tr><td colspan="6" style="text-align:center;color:var(--red)">Failed to load users</td></tr>`;
   }
 }
 
+function renderStats(data) {
+  const admins   = data.filter(u => u.role === 'admin').length;
+  const managers = data.filter(u => u.role === 'manager').length;
+  const staff    = data.filter(u => u.role === 'staff').length;
+  document.getElementById('user-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Users</div>
+      <div class="stat-value">${data.length}</div>
+      <div class="stat-sub">${admins} admin · ${managers} manager · ${staff} staff</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active</div>
+      <div class="stat-value" style="color:var(--green)">${data.filter(u => u.is_active !== false).length}</div>
+      <div class="stat-sub">Currently enabled</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Inactive</div>
+      <div class="stat-value" style="color:var(--red)">${data.filter(u => u.is_active === false).length}</div>
+      <div class="stat-sub">Deactivated accounts</div>
+    </div>`;
+}
+
 function renderUsers(users) {
-  const tbody = document.getElementById('users-tbody');
+  const tbody   = document.getElementById('users-tbody');
   const isAdmin = currentUser && currentUser.role === 'admin';
 
   if (!users.length) {
@@ -190,41 +191,62 @@ function renderUsers(users) {
   }
 
   tbody.innerHTML = users.map(u => {
-    const isSelf = currentUser && currentUser.id === u.id;
-    const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    const isSelf    = currentUser && currentUser.id === u.id;
+    const initials  = u.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    const isActive  = u.is_active !== false;
+
+    // Admin actions for other users
+    const adminActions = isAdmin && !isSelf ? `
+      <div class="flex gap-1 items-center">
+        <button class="btn-icon" title="Edit name" onclick="openEditNameModal(${u.id}, '${u.name.replace(/'/g,"\\'")}')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="btn-icon" title="Change role" onclick="openRoleModal(${u.id}, '${u.name.replace(/'/g,"\\'")}', '${u.role}')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
+        </button>
+        <button class="btn-icon" title="Reset password" onclick="openResetPasswordModal(${u.id}, '${u.name.replace(/'/g,"\\'")}')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </button>
+        <button class="btn-icon" title="${isActive ? 'Deactivate' : 'Activate'}" onclick="toggleStatus(${u.id}, ${!isActive}, '${u.name.replace(/'/g,"\\'")}')">
+          ${isActive
+            ? '<svg width="14" height="14" fill="none" stroke="var(--yellow)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'
+            : '<svg width="14" height="14" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'}
+        </button>
+        <button class="btn-icon" title="Delete user" onclick="deleteUser(${u.id}, '${u.name.replace(/'/g,"\\'")}')">
+          <svg width="14" height="14" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>` : '';
+
+    // Self: can only change own password
+    const selfAction = isSelf ? `
+      <button class="btn btn-secondary btn-sm" onclick="openChangePasswordModal()">Change Password</button>` : '';
+
     return `
       <tr>
         <td>
           <div class="flex items-center gap-2">
-            <div style="width:34px;height:34px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--brand);flex-shrink:0">${initials}</div>
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--brand);flex-shrink:0;opacity:${isActive ? 1 : 0.45}">${initials}</div>
             <div>
               <div class="font-500">${u.name} ${isSelf ? '<span style="font-size:.7rem;color:var(--text-3)">(you)</span>' : ''}</div>
             </div>
           </div>
         </td>
         <td class="text-sm text-2">${u.email}</td>
-        <td>${statusBadge(u.role)}</td>
+        <td>${roleBadge(u.role)}</td>
         <td class="text-sm text-3">${formatDate(u.created_at)}</td>
-        <td>${u.is_active !== false ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">Inactive</span>'}</td>
-        <td>
-          ${isAdmin && !isSelf ? `
-            <div class="flex gap-1">
-              <button class="btn-icon" title="Change role" onclick="openRoleModal(${u.id},'${u.name}','${u.role}')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </button>
-              <button class="btn-icon" title="Change password" onclick="openPasswordModal(${u.id},'${u.name}')">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </button>
-            </div>` : ''}
-          ${isSelf ? `
-            <button class="btn btn-secondary btn-sm" onclick="openMyPasswordModal()">Change Password</button>` : ''}
-        </td>
+        <td>${isActive ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">Inactive</span>'}</td>
+        <td>${adminActions}${selfAction}</td>
       </tr>`;
   }).join('');
 }
 
-// ── Add User modal ────────────────────────────────────────────
-function openUserModal() {
+function roleBadge(role) {
+  const map = { admin: 'badge-purple', manager: 'badge-blue', staff: 'badge-gray' };
+  return `<span class="badge ${map[role] || 'badge-gray'}">${role}</span>`;
+}
+
+// ── Add User ──────────────────────────────────────────────────
+function openAddUserModal() {
   const html = `
     <div class="modal-header">
       <h2>Add New User</h2>
@@ -234,18 +256,18 @@ function openUserModal() {
       <div class="form-grid-2">
         <div class="form-group">
           <label class="form-label">Full Name *</label>
-          <input class="form-control" id="u-name" placeholder="John Doe" />
+          <input class="form-control" id="u-name" placeholder="e.g. Rahim Hossain" />
         </div>
         <div class="form-group">
           <label class="form-label">Email *</label>
-          <input class="form-control" id="u-email" type="email" placeholder="john@example.com" />
+          <input class="form-control" id="u-email" type="email" placeholder="rahim@business.com" />
         </div>
         <div class="form-group">
           <label class="form-label">Role *</label>
           <select class="form-control" id="u-role">
-            <option value="staff">Staff</option>
-            <option value="manager">Manager</option>
-            <option value="admin">Admin</option>
+            <option value="staff">Staff — View CRM, Sales, Inventory</option>
+            <option value="manager">Manager — + Accounting, Analytics, confirm orders</option>
+            <option value="admin">Admin — Full access including Users</option>
           </select>
         </div>
         <div class="form-group">
@@ -257,18 +279,18 @@ function openUserModal() {
         <label class="form-label">Confirm Password *</label>
         <input class="form-control" id="u-confirm" type="password" placeholder="Repeat password" />
       </div>
-      <div style="background:var(--brand-light);border-radius:var(--radius-sm);padding:.65rem .9rem;font-size:.8rem;color:var(--brand)">
-        The new user will be able to log in immediately with these credentials.
+      <div style="background:var(--brand-light);border-radius:var(--radius-sm);padding:.65rem .9rem;font-size:.8rem;color:var(--brand);line-height:1.5">
+        The new user can log in immediately with these credentials. You can change their role or reset their password at any time.
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="save-user-btn" onclick="saveUser()">Create User</button>
+      <button class="btn btn-primary" id="save-user-btn" onclick="saveNewUser()">Create User</button>
     </div>`;
   openModal(html, { large: true });
 }
 
-async function saveUser() {
+async function saveNewUser() {
   const btn      = document.getElementById('save-user-btn');
   const name     = document.getElementById('u-name').value.trim();
   const email    = document.getElementById('u-email').value.trim();
@@ -276,22 +298,61 @@ async function saveUser() {
   const password = document.getElementById('u-password').value;
   const confirm  = document.getElementById('u-confirm').value;
 
-  if (!name)              { toast('Name is required', 'error'); return; }
-  if (!email)             { toast('Email is required', 'error'); return; }
-  if (password.length < 6){ toast('Password must be at least 6 characters', 'error'); return; }
-  if (password !== confirm){ toast('Passwords do not match', 'error'); return; }
+  if (!name)               { toast('Full name is required', 'error'); return; }
+  if (!email)              { toast('Email is required', 'error'); return; }
+  if (password.length < 6) { toast('Password must be at least 6 characters', 'error'); return; }
+  if (password !== confirm) { toast('Passwords do not match', 'error'); return; }
 
   btnLoading(btn, true);
   try {
     await api.register({ name, email, role, password });
-    toast(`User ${name} created`, 'success');
+    toast(`${name} added as ${role}`, 'success');
     closeModal();
     loadUsers();
-  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+  } catch(e) { toast(e.message || 'Failed to create user', 'error'); btnLoading(btn, false); }
 }
 
-// ── Change role modal ─────────────────────────────────────────
+// ── Edit Name ─────────────────────────────────────────────────
+function openEditNameModal(id, currentName) {
+  const html = `
+    <div class="modal-header">
+      <h2>Edit Name</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input class="form-control" id="edit-name" value="${currentName}" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-name-btn" onclick="saveName(${id})">Save</button>
+    </div>`;
+  openModal(html);
+  setTimeout(() => document.getElementById('edit-name').focus(), 100);
+}
+
+async function saveName(id) {
+  const btn  = document.getElementById('save-name-btn');
+  const name = document.getElementById('edit-name').value.trim();
+  if (!name) { toast('Name cannot be empty', 'error'); return; }
+  btnLoading(btn, true);
+  try {
+    await api.updateName(id, name);
+    toast('Name updated', 'success');
+    closeModal();
+    loadUsers();
+  } catch(e) { toast(e.message || 'Failed to update name', 'error'); btnLoading(btn, false); }
+}
+
+// ── Change Role ───────────────────────────────────────────────
 function openRoleModal(id, name, currentRole) {
+  const roleInfo = {
+    staff:   'Can view CRM, Sales, Inventory. Cannot confirm orders, access Accounting or Analytics.',
+    manager: 'Can do everything Staff can + confirm/cancel orders, record payments, access Accounting and Analytics.',
+    admin:   'Full access to all modules including User management.',
+  };
   const html = `
     <div class="modal-header">
       <h2>Change Role — ${name}</h2>
@@ -300,40 +361,44 @@ function openRoleModal(id, name, currentRole) {
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">New Role</label>
-        <select class="form-control" id="new-role">
-          ${['staff','manager','admin'].map(r => `<option value="${r}" ${r === currentRole ? 'selected' : ''}>${r.charAt(0).toUpperCase()+r.slice(1)}</option>`).join('')}
+        <select class="form-control" id="new-role" onchange="updateRoleHint(this.value)">
+          ${['staff','manager','admin'].map(r => `<option value="${r}" ${r===currentRole?'selected':''}>${r.charAt(0).toUpperCase()+r.slice(1)}</option>`).join('')}
         </select>
       </div>
-      <p class="text-sm text-3">Role determines which modules and actions the user can access across the platform.</p>
+      <div id="role-hint" style="background:var(--surface-2);border-radius:var(--radius-sm);padding:.6rem .85rem;font-size:.8rem;color:var(--text-2);line-height:1.5">
+        ${roleInfo[currentRole]}
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" id="save-role-btn" onclick="saveRole(${id})">Update Role</button>
     </div>`;
   openModal(html);
+  window._roleInfo = roleInfo;
+}
+
+function updateRoleHint(role) {
+  const el = document.getElementById('role-hint');
+  if (el && window._roleInfo) el.textContent = window._roleInfo[role];
 }
 
 async function saveRole(id) {
   const btn  = document.getElementById('save-role-btn');
   const role = document.getElementById('new-role').value;
-  // Find existing user data
-  const user = allUsers.find(u => u.id === id);
-  if (!user) return;
   btnLoading(btn, true);
   try {
-    // Re-register with new role is not ideal, but with the current backend
-    // we can only hit the register endpoint. Better: add a PATCH /api/auth/users/:id endpoint.
-    // For now we show a notice about needing backend support.
-    toast('Role update requires a PATCH /api/auth/users/:id endpoint (see gap notes)', 'warning');
-    btnLoading(btn, false);
-  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+    await api.updateRole(id, role);
+    toast('Role updated', 'success');
+    closeModal();
+    loadUsers();
+  } catch(e) { toast(e.message || 'Failed to update role', 'error'); btnLoading(btn, false); }
 }
 
-// ── Change password modals ────────────────────────────────────
-function openPasswordModal(userId, name) {
+// ── Reset Password (admin sets for another user) ──────────────
+function openResetPasswordModal(userId, name) {
   const html = `
     <div class="modal-header">
-      <h2>Set Password — ${name}</h2>
+      <h2>Reset Password — ${name}</h2>
       <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="modal-body">
@@ -343,18 +408,33 @@ function openPasswordModal(userId, name) {
       </div>
       <div class="form-group">
         <label class="form-label">Confirm Password *</label>
-        <input class="form-control" id="pw-confirm" type="password" placeholder="Repeat password" />
+        <input class="form-control" id="pw-confirm" type="password" />
       </div>
-      <p class="text-sm text-3">This requires a PATCH /api/auth/users/:id/password endpoint on the backend.</p>
+      <p class="text-sm text-3" style="margin-top:.25rem">The user will be able to log in with this new password immediately.</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="save-pw-btn" onclick="savePassword(${userId})">Set Password</button>
+      <button class="btn btn-primary" id="save-pw-btn" onclick="saveResetPassword(${userId})">Reset Password</button>
     </div>`;
   openModal(html);
 }
 
-function openMyPasswordModal() {
+async function saveResetPassword(userId) {
+  const btn    = document.getElementById('save-pw-btn');
+  const newPw  = document.getElementById('pw-new').value;
+  const conf   = document.getElementById('pw-confirm').value;
+  if (newPw.length < 6) { toast('Password must be at least 6 characters', 'error'); return; }
+  if (newPw !== conf)   { toast('Passwords do not match', 'error'); return; }
+  btnLoading(btn, true);
+  try {
+    await api.resetPassword(userId, newPw);
+    toast('Password reset successfully', 'success');
+    closeModal();
+  } catch(e) { toast(e.message || 'Failed to reset password', 'error'); btnLoading(btn, false); }
+}
+
+// ── Change Own Password ───────────────────────────────────────
+function openChangePasswordModal() {
   const html = `
     <div class="modal-header">
       <h2>Change My Password</h2>
@@ -373,24 +453,61 @@ function openMyPasswordModal() {
         <label class="form-label">Confirm New Password *</label>
         <input class="form-control" id="pw-confirm" type="password" />
       </div>
-      <p class="text-sm text-3">This requires a POST /api/auth/change-password endpoint on the backend.</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary">Save Password</button>
+      <button class="btn btn-primary" id="save-cpw-btn" onclick="saveChangePassword()">Save Password</button>
     </div>`;
   openModal(html);
 }
 
-async function savePassword(userId) {
-  const newPw = document.getElementById('pw-new').value;
-  const conf  = document.getElementById('pw-confirm').value;
-  if (newPw.length < 6)   { toast('Password must be at least 6 characters', 'error'); return; }
+async function saveChangePassword() {
+  const btn     = document.getElementById('save-cpw-btn');
+  const current = document.getElementById('pw-current').value;
+  const newPw   = document.getElementById('pw-new').value;
+  const conf    = document.getElementById('pw-confirm').value;
+  if (!current)            { toast('Enter your current password', 'error'); return; }
+  if (newPw.length < 6)    { toast('New password must be at least 6 characters', 'error'); return; }
   if (newPw !== conf)      { toast('Passwords do not match', 'error'); return; }
-  toast('Password change requires a backend endpoint (see gap notes)', 'warning');
+  btnLoading(btn, true);
+  try {
+    await api.changePassword(current, newPw);
+    toast('Password changed successfully', 'success');
+    closeModal();
+  } catch(e) { toast(e.message || 'Failed to change password', 'error'); btnLoading(btn, false); }
 }
 
-// ── Init ──────────────────────────────────────────────────────
+// ── Toggle Active Status ──────────────────────────────────────
+async function toggleStatus(id, activate, name) {
+  const action = activate ? 'Activate' : 'Deactivate';
+  confirmDialog(
+    `${action} <strong>${name}</strong>?${!activate ? ' They will not be able to log in.' : ''}`,
+    async () => {
+      try {
+        await api.updateStatus(id, activate);
+        toast(`${name} ${activate ? 'activated' : 'deactivated'}`, 'success');
+        loadUsers();
+      } catch(e) { toast(e.message || 'Failed to update status', 'error'); }
+    },
+    { title: `${action} User`, danger: !activate, confirmText: action }
+  );
+}
+
+// ── Delete User ───────────────────────────────────────────────
+async function deleteUser(id, name) {
+  confirmDialog(
+    `Permanently delete <strong>${name}</strong>? This cannot be undone.`,
+    async () => {
+      try {
+        await api.deleteUser(id);
+        toast(`${name} deleted`, 'success');
+        loadUsers();
+      } catch(e) { toast(e.message || 'Failed to delete user', 'error'); }
+    },
+    { title: 'Delete User', danger: true, confirmText: 'Delete' }
+  );
+}
+
 init();
 </script>
 </body>
