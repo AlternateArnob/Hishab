@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users — Hishab ERP</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">H</div>
+      <div><div class="logo-text">Hishab</div><div class="logo-sub">ERP Platform</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="nav-section-label">Modules</div>
+      <a class="nav-item" href="crm.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        CRM
+      </a>
+      <a class="nav-item" href="sales.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sales
+      </a>
+      <a class="nav-item" href="inventory.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Inventory
+      </a>
+      <a class="nav-item" href="accounting.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Accounting
+      </a>
+      <a class="nav-item" href="analytics.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
+        Analytics
+      </a>
+      <div class="nav-section-label">Admin</div>
+      <a class="nav-item active" href="users.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
+        Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="logout()">
+        <div class="user-avatar" id="sidebar-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin</div>
+          <div class="user-role" id="sidebar-user-role">admin</div>
+        </div>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" viewBox="0 0 24 24" style="margin-left:auto;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="hamburger" onclick="openSidebar()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div>
+      <div class="topbar-title">Users</div>
+      <div class="topbar-breadcrumb">Team &amp; Access Control</div>
+    </div>
+    <div class="topbar-actions" id="topbar-actions">
+      <!-- Add User button shown only for admin — injected after auth -->
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Access guard banner -->
+    <div id="access-guard" class="hidden" style="background:var(--yellow-bg);border:1px solid var(--yellow-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem">
+      <svg width="18" height="18" fill="none" stroke="var(--yellow)" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="text-sm">You have read-only access to this page. Only admins can create or manage users.</span>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stat-grid" id="user-stats">
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+      <div class="stat-card"><div class="spinner"></div></div>
+    </div>
+
+    <!-- User table -->
+    <div class="card">
+      <div class="card-header">
+        <h3 id="user-table-title">Team Members</h3>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th id="actions-col"></th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="6" style="text-align:center;padding:2rem"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+requireAuth();
+populateSidebarUser();
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
+let currentUser = null;
+let allUsers = [];
+
+async function init() {
+  try {
+    const { data } = await api.me();
+    currentUser = data;
+
+    if (currentUser.role === 'admin') {
+      document.getElementById('topbar-actions').innerHTML = `
+        <button class="btn btn-primary btn-sm" onclick="openUserModal()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add User
+        </button>`;
+    } else {
+      document.getElementById('access-guard').classList.remove('hidden');
+    }
+  } catch(e) {}
+  loadUsers();
+}
+
+async function loadUsers() {
+  try {
+    const { data } = await api.users();
+    allUsers = data;
+    renderUsers(data);
+
+    const admins   = data.filter(u => u.role === 'admin').length;
+    const managers = data.filter(u => u.role === 'manager').length;
+    const staff    = data.filter(u => u.role === 'staff').length;
+    document.getElementById('user-stats').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value">${data.length}</div>
+        <div class="stat-sub">Team members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Admins</div>
+        <div class="stat-value" style="color:var(--purple)">${admins}</div>
+        <div class="stat-sub">${managers} managers · ${staff} staff</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active</div>
+        <div class="stat-value" style="color:var(--green)">${data.filter(u => u.is_active !== false).length}</div>
+        <div class="stat-sub">Out of ${data.length} total</div>
+      </div>`;
+    document.getElementById('user-table-title').textContent = `Team Members (${data.length})`;
+  } catch(e) {
+    document.getElementById('users-tbody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--red)">Failed to load users</td></tr>`;
+  }
+}
+
+function renderUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  const isAdmin = currentUser && currentUser.role === 'admin';
+
+  if (!users.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p>No users yet</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = users.map(u => {
+    const isSelf = currentUser && currentUser.id === u.id;
+    const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+    return `
+      <tr>
+        <td>
+          <div class="flex items-center gap-2">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--brand);flex-shrink:0">${initials}</div>
+            <div>
+              <div class="font-500">${u.name} ${isSelf ? '<span style="font-size:.7rem;color:var(--text-3)">(you)</span>' : ''}</div>
+            </div>
+          </div>
+        </td>
+        <td class="text-sm text-2">${u.email}</td>
+        <td>${statusBadge(u.role)}</td>
+        <td class="text-sm text-3">${formatDate(u.created_at)}</td>
+        <td>${u.is_active !== false ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-gray">Inactive</span>'}</td>
+        <td>
+          ${isAdmin && !isSelf ? `
+            <div class="flex gap-1">
+              <button class="btn-icon" title="Change role" onclick="openRoleModal(${u.id},'${u.name}','${u.role}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn-icon" title="Change password" onclick="openPasswordModal(${u.id},'${u.name}')">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </button>
+            </div>` : ''}
+          ${isSelf ? `
+            <button class="btn btn-secondary btn-sm" onclick="openMyPasswordModal()">Change Password</button>` : ''}
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ── Add User modal ────────────────────────────────────────────
+function openUserModal() {
+  const html = `
+    <div class="modal-header">
+      <h2>Add New User</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input class="form-control" id="u-name" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input class="form-control" id="u-email" type="email" placeholder="john@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role *</label>
+          <select class="form-control" id="u-role">
+            <option value="staff">Staff</option>
+            <option value="manager">Manager</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input class="form-control" id="u-password" type="password" placeholder="Min 6 characters" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password *</label>
+        <input class="form-control" id="u-confirm" type="password" placeholder="Repeat password" />
+      </div>
+      <div style="background:var(--brand-light);border-radius:var(--radius-sm);padding:.65rem .9rem;font-size:.8rem;color:var(--brand)">
+        The new user will be able to log in immediately with these credentials.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-user-btn" onclick="saveUser()">Create User</button>
+    </div>`;
+  openModal(html, { large: true });
+}
+
+async function saveUser() {
+  const btn      = document.getElementById('save-user-btn');
+  const name     = document.getElementById('u-name').value.trim();
+  const email    = document.getElementById('u-email').value.trim();
+  const role     = document.getElementById('u-role').value;
+  const password = document.getElementById('u-password').value;
+  const confirm  = document.getElementById('u-confirm').value;
+
+  if (!name)              { toast('Name is required', 'error'); return; }
+  if (!email)             { toast('Email is required', 'error'); return; }
+  if (password.length < 6){ toast('Password must be at least 6 characters', 'error'); return; }
+  if (password !== confirm){ toast('Passwords do not match', 'error'); return; }
+
+  btnLoading(btn, true);
+  try {
+    await api.register({ name, email, role, password });
+    toast(`User ${name} created`, 'success');
+    closeModal();
+    loadUsers();
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+// ── Change role modal ─────────────────────────────────────────
+function openRoleModal(id, name, currentRole) {
+  const html = `
+    <div class="modal-header">
+      <h2>Change Role — ${name}</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">New Role</label>
+        <select class="form-control" id="new-role">
+          ${['staff','manager','admin'].map(r => `<option value="${r}" ${r === currentRole ? 'selected' : ''}>${r.charAt(0).toUpperCase()+r.slice(1)}</option>`).join('')}
+        </select>
+      </div>
+      <p class="text-sm text-3">Role determines which modules and actions the user can access across the platform.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-role-btn" onclick="saveRole(${id})">Update Role</button>
+    </div>`;
+  openModal(html);
+}
+
+async function saveRole(id) {
+  const btn  = document.getElementById('save-role-btn');
+  const role = document.getElementById('new-role').value;
+  // Find existing user data
+  const user = allUsers.find(u => u.id === id);
+  if (!user) return;
+  btnLoading(btn, true);
+  try {
+    // Re-register with new role is not ideal, but with the current backend
+    // we can only hit the register endpoint. Better: add a PATCH /api/auth/users/:id endpoint.
+    // For now we show a notice about needing backend support.
+    toast('Role update requires a PATCH /api/auth/users/:id endpoint (see gap notes)', 'warning');
+    btnLoading(btn, false);
+  } catch(e) { toast(e.message, 'error'); btnLoading(btn, false); }
+}
+
+// ── Change password modals ────────────────────────────────────
+function openPasswordModal(userId, name) {
+  const html = `
+    <div class="modal-header">
+      <h2>Set Password — ${name}</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">New Password *</label>
+        <input class="form-control" id="pw-new" type="password" placeholder="Min 6 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password *</label>
+        <input class="form-control" id="pw-confirm" type="password" placeholder="Repeat password" />
+      </div>
+      <p class="text-sm text-3">This requires a PATCH /api/auth/users/:id/password endpoint on the backend.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-pw-btn" onclick="savePassword(${userId})">Set Password</button>
+    </div>`;
+  openModal(html);
+}
+
+function openMyPasswordModal() {
+  const html = `
+    <div class="modal-header">
+      <h2>Change My Password</h2>
+      <button class="btn-icon" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Current Password *</label>
+        <input class="form-control" id="pw-current" type="password" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password *</label>
+        <input class="form-control" id="pw-new" type="password" placeholder="Min 6 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm New Password *</label>
+        <input class="form-control" id="pw-confirm" type="password" />
+      </div>
+      <p class="text-sm text-3">This requires a POST /api/auth/change-password endpoint on the backend.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary">Save Password</button>
+    </div>`;
+  openModal(html);
+}
+
+async function savePassword(userId) {
+  const newPw = document.getElementById('pw-new').value;
+  const conf  = document.getElementById('pw-confirm').value;
+  if (newPw.length < 6)   { toast('Password must be at least 6 characters', 'error'); return; }
+  if (newPw !== conf)      { toast('Passwords do not match', 'error'); return; }
+  toast('Password change requires a backend endpoint (see gap notes)', 'warning');
+}
+
+// ── Init ──────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
