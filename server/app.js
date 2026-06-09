@@ -33,7 +33,7 @@ app.get('*', (req, res) => {
 // ── Global error handler ──────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(500).json({ success: false, message: 'Internal server error' });
+  res.status(5001).json({ success: false, message: 'Internal server error' });
 });
 
 module.exports = app;

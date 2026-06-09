@@ -87,3 +87,92 @@ exports.listUsers = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+// ── PATCH /api/auth/users/:id/role (admin only) ───────────────
+exports.updateRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['admin', 'manager', 'staff'].includes(role))
+      return res.status(400).json({ success: false, message: 'Invalid role' });
+    if (parseInt(req.params.id) === req.user.id)
+      return res.status(400).json({ success: false, message: 'Cannot change your own role' });
+    await db.query('UPDATE users SET role = ? WHERE id = ?', [role, req.params.id]);
+    return res.json({ success: true, message: 'Role updated' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// ── PATCH /api/auth/users/:id/status (admin only) ─────────────
+exports.updateStatus = async (req, res) => {
+  try {
+    const { is_active } = req.body;
+    if (parseInt(req.params.id) === req.user.id)
+      return res.status(400).json({ success: false, message: 'Cannot deactivate yourself' });
+    await db.query('UPDATE users SET is_active = ? WHERE id = ?', [is_active ? 1 : 0, req.params.id]);
+    return res.json({ success: true, message: `User ${is_active ? 'activated' : 'deactivated'}` });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// ── POST /api/auth/change-password (self) ─────────────────────
+exports.changePassword = async (req, res) => {
+  try {
+    const { current_password, new_password } = req.body;
+    if (!current_password || !new_password)
+      return res.status(400).json({ success: false, message: 'Both fields required' });
+    if (new_password.length < 6)
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
+    if (!rows.length) return res.status(404).json({ success: false, message: 'User not found' });
+    const match = await bcrypt.compare(current_password, rows[0].password);
+    if (!match) return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+    const hashed = await bcrypt.hash(new_password, 10);
+    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.user.id]);
+    return res.json({ success: true, message: 'Password changed' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// ── PATCH /api/auth/users/:id/password (admin only) ───────────
+exports.resetPassword = async (req, res) => {
+  try {
+    const { new_password } = req.body;
+    if (!new_password || new_password.length < 6)
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    const hashed = await bcrypt.hash(new_password, 10);
+    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.params.id]);
+    return res.json({ success: true, message: 'Password reset' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// ── PATCH /api/auth/users/:id/name (admin only) ───────────────
+exports.updateName = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || !name.trim())
+      return res.status(400).json({ success: false, message: 'Name is required' });
+    await db.query('UPDATE users SET name = ? WHERE id = ?', [name.trim(), req.params.id]);
+    return res.json({ success: true, message: 'Name updated' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// ── DELETE /api/auth/users/:id (admin only) ───────────────────
+exports.deleteUser = async (req, res) => {
+  try {
+    if (parseInt(req.params.id) === req.user.id)
+      return res.status(400).json({ success: false, message: 'Cannot delete your own account' });
+    const [rows] = await db.query('SELECT id FROM users WHERE id = ?', [req.params.id]);
+    if (!rows.length)
+      return res.status(404).json({ success: false, message: 'User not found' });
+    await db.query('DELETE FROM users WHERE id = ?', [req.params.id]);
+    return res.json({ success: true, message: 'User deleted' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

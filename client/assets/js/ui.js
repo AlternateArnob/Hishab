@@ -199,3 +199,16 @@ function renderPagination(container, total, page, limit, onPage) {
     btn.addEventListener('click', () => onPage(Number(btn.dataset.p)));
   });
 }
+
+// ── Role-access banner ────────────────────────────────────────
+// Shows a subtle read-only banner at the top of main-content for staff on partially-restricted pages
+function showStaffReadOnlyBanner(message = "You have read-only access. Some actions require manager or admin permissions.") {
+  const main = document.querySelector('.main-content');
+  if (!main || document.getElementById('role-access-banner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'role-access-banner';
+  banner.style.cssText = 'display:flex;align-items:center;gap:.65rem;background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--text-2)';
+  banner.innerHTML = `<svg width="15" height="15" fill="none" stroke="var(--yellow)" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>${message}`;
+  main.prepend(banner);
+}
+

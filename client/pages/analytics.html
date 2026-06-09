@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — Hishab ERP</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/layout.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    .kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .alert-dot { width:8px; height:8px; border-radius:50%; background:var(--red); flex-shrink:0; }
+    .report-controls { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; padding:1rem 1.25rem; border-bottom:1px solid var(--border); }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">H</div>
+      <div><div class="logo-text">Hishab</div><div class="logo-sub">ERP Platform</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <div class="nav-section-label">Modules</div>
+      <a class="nav-item" href="crm.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        CRM
+      </a>
+      <a class="nav-item" href="sales.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sales
+      </a>
+      <a class="nav-item" href="inventory.html">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Inventory
+      </a>
+      <a class="nav-item" href="accounting.html" data-role="admin,manager">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Accounting
+      </a>
+      <a class="nav-item active" href="analytics.html" data-role="admin,manager">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
+        Analytics
+      </a>
+          <div class="nav-section-label" data-role="admin,manager">Admin</div>
+      <a class="nav-item" href="users.html" data-role="admin,manager">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
+        Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" onclick="logout()">
+        <div class="user-avatar" id="sidebar-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Admin</div>
+          <div class="user-role" id="sidebar-user-role">admin</div>
+        </div>
+        <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" viewBox="0 0 24 24" style="margin-left:auto;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button class="hamburger" onclick="openSidebar()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div>
+      <div class="topbar-title">Analytics</div>
+      <div class="topbar-breadcrumb">Business Reports &amp; Insights</div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
+      <button class="tab-btn" onclick="switchTab('sales-report', this)">Sales Report</button>
+      <button class="tab-btn" onclick="switchTab('inventory-report', this)">Inventory Report</button>
+    </div>
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <!-- KPI row -->
+      <div class="kpi-row" id="kpi-row">
+        <div class="kpi-card"><div class="spinner"></div></div>
+        <div class="kpi-card"><div class="spinner"></div></div>
+        <div class="kpi-card"><div class="spinner"></div></div>
+        <div class="kpi-card"><div class="spinner"></div></div>
+        <div class="kpi-card"><div class="spinner"></div></div>
+        <div class="kpi-card"><div class="spinner"></div></div>
+      </div>
+
+      <!-- Charts 2-col -->
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header"><h3>Revenue — Last 30 Days</h3></div>
+          <div class="card-body"><div class="chart-container"><canvas id="revenue-day-chart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Revenue — Last 6 Months</h3></div>
+          <div class="card-body"><div class="chart-container"><canvas id="revenue-month-chart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>New Customers — Last 6 Months</h3></div>
+          <div class="card-body"><div class="chart-container"><canvas id="customer-chart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Top 5 Selling Products</h3></div>
+          <div class="card-body" id="top-products-body"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALES REPORT TAB -->
+    <div id="tab-sales-report" class="hidden">
+      <div class="card">
+        <div class="report-controls">
+          <input class="form-control" type="date" id="sr-from" style="width:145px" />
+          <span class="text-sm text-3">to</span>
+          <input class="form-control" type="date" id="sr-to" style="width:145px" />
+          <select class="form-control" id="sr-group" style="width:120px">
+            <option value="day">By Day</option>
+            <option value="week">By Week</option>
+            <option value="month" selected>By Month</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="loadSalesReport()">Run Report</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportSalesCSV()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div class="card-body" style="padding-bottom:.5rem">
+          <div class="chart-container" style="height:240px">
+            <canvas id="sales-report-chart"></canvas>
+          </div>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0">
+          <table>
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th style="text-align:right">Orders</th>
+                <th style="text-align:right">Revenue</th>
+                <th style="text-align:right">Avg. Order Value</th>
+              </tr>
+            </thead>
+            <tbody id="sr-tbody">
+              <tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--text-3)">Set a date range and click Run Report</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTORY REPORT TAB -->
+    <div id="tab-inventory-report" class="hidden">
+      <div class="card">
+        <div class="card-header">
+          <h3 id="inv-report-title">Inventory Status</h3>
+          <select class="form-control" id="inv-status-filter" style="width:140px" onchange="filterInvReport()">
+            <option value="">All Products</option>
+            <option value="out_of_stock">Out of Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="ok">OK</option>
+          </select>
+        </div>
+        <div class="card-body" style="padding:.75rem 1.25rem">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-bottom:1rem" id="inv-kpi-row">
+            <div class="spinner"></div>
+          </div>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th style="text-align:right">In Stock</th>
+                <th style="text-align:right">Min Stock</th>
+                <th style="text-align:right">Cost Price</th>
+                <th style="text-align:right">Selling Price</th>
+                <th style="text-align:right">Stock Value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="inv-tbody">
+              <tr><td colspan="9" style="text-align:center;padding:2rem"><div class="spinner"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script>
+requireRole('admin', 'manager');
+populateSidebarUser();
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size   = 12;
+Chart.defaults.color       = '#94A3B8';
+
+let srChartInstance = null;
+let allInvRows = [];
+
+// Default date range for sales report: last 6 months
+const today     = new Date().toISOString().split('T')[0];
+const sixMonths = new Date(Date.now() - 180 * 86400000).toISOString().split('T')[0];
+document.getElementById('sr-from').value = sixMonths;
+document.getElementById('sr-to').value   = today;
+
+// ── Tabs ──────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['overview','sales-report','inventory-report'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+  });
+  if (tab === 'sales-report' && !srChartInstance) loadSalesReport();
+  if (tab === 'inventory-report' && !allInvRows.length) loadInventoryReport();
+}
+
+// ── Overview ──────────────────────────────────────────────────
+async function loadOverview() {
+  try {
+    const { data } = await api.analytics.dashboard();
+    const { kpi, revenueByDay, revenueByMonth, topProducts, customerGrowth } = data;
+
+    // KPI cards
+    document.getElementById('kpi-row').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-label">Revenue This Month</div>
+        <div class="kpi-value">${formatCurrency(kpi.revenue_this_month || 0)}</div>
+        <div class="kpi-trend">vs expenses ${formatCurrency(kpi.expenses_this_month || 0)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Customers</div>
+        <div class="kpi-value">${kpi.active_customers || 0}</div>
+        <div class="kpi-trend">Confirmed status</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Open Orders</div>
+        <div class="kpi-value" style="color:var(--brand)">${kpi.open_orders || 0}</div>
+        <div class="kpi-trend">Awaiting delivery</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Outstanding</div>
+        <div class="kpi-value" style="color:var(--yellow)">${formatCurrency(kpi.outstanding_receivable || 0)}</div>
+        <div class="kpi-trend">Unpaid invoices</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Expenses This Month</div>
+        <div class="kpi-value" style="color:var(--red)">${formatCurrency(kpi.expenses_this_month || 0)}</div>
+        <div class="kpi-trend">Recorded transactions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Low Stock Alerts</div>
+        <div class="kpi-value" style="color:${kpi.low_stock_alerts > 0 ? 'var(--red)' : 'var(--green)'}">${kpi.low_stock_alerts || 0}</div>
+        <div class="kpi-trend">${kpi.low_stock_alerts > 0 ? 'Products need restocking' : 'All stocked'}</div>
+      </div>`;
+
+    // Revenue by day chart
+    makeLineChart('revenue-day-chart',
+      revenueByDay.map(r => r.date),
+      revenueByDay.map(r => parseFloat(r.revenue)),
+      'Revenue', '#2563EB'
+    );
+
+    // Revenue by month chart
+    makeBarChart('revenue-month-chart',
+      revenueByMonth.map(r => r.month),
+      revenueByMonth.map(r => parseFloat(r.revenue)),
+      'Revenue', '#16A34A'
+    );
+
+    // Customer growth
+    makeBarChart('customer-chart',
+      customerGrowth.map(r => r.month),
+      customerGrowth.map(r => r.new_customers),
+      'New Customers', '#7C3AED'
+    );
+
+    // Top products table
+    const tp = document.getElementById('top-products-body');
+    if (!topProducts.length) {
+      tp.innerHTML = `<div class="empty-state"><p>No sales data yet</p></div>`;
+    } else {
+      const max = Math.max(...topProducts.map(p => p.total_sold));
+      tp.innerHTML = topProducts.map((p, i) => `
+        <div style="margin-bottom:.85rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
+            <div class="flex items-center gap-2">
+              <span style="width:20px;height:20px;border-radius:50%;background:var(--surface-2);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--text-2);flex-shrink:0">${i+1}</span>
+              <span class="font-500 text-sm">${p.name}</span>
+            </div>
+            <span class="text-sm text-2">${p.total_sold} sold · ${formatCurrency(p.total_revenue)}</span>
+          </div>
+          <div style="height:6px;border-radius:3px;background:var(--border);overflow:hidden">
+            <div style="height:100%;border-radius:3px;background:var(--brand);width:${Math.round((p.total_sold/max)*100)}%;transition:width .5s ease"></div>
+          </div>
+        </div>`).join('');
+    }
+
+  } catch(e) {
+    document.getElementById('kpi-row').innerHTML = `<div class="kpi-card"><p class="text-sm" style="color:var(--red)">Failed to load analytics</p></div>`;
+  }
+}
+
+function makeLineChart(canvasId, labels, data, label, color) {
+  if (!labels.length) return;
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label, data,
+        borderColor: color, backgroundColor: color + '18',
+        fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function makeBarChart(canvasId, labels, data, label, color) {
+  if (!labels.length) return;
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label, data,
+        backgroundColor: color + '22', borderColor: color,
+        borderWidth: 2, borderRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => label === 'New Customers' ? v : ('৳' + v.toLocaleString()) }, grid: { color: 'rgba(226,232,240,.6)' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ── Sales Report ──────────────────────────────────────────────
+async function loadSalesReport() {
+  const from     = document.getElementById('sr-from').value;
+  const to       = document.getElementById('sr-to').value;
+  const group_by = document.getElementById('sr-group').value;
+  const tbody    = document.getElementById('sr-tbody');
+  tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:1.5rem"><div class="spinner"></div></td></tr>`;
+
+  try {
+    const { data } = await api.analytics.salesReport(buildQuery({ from, to, group_by }));
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><p>No sales data for this period</p></div></td></tr>`;
+      if (srChartInstance) { srChartInstance.destroy(); srChartInstance = null; }
+      return;
+    }
+
+    // Chart
+    if (srChartInstance) srChartInstance.destroy();
+    const ctx = document.getElementById('sales-report-chart').getContext('2d');
+    srChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(r => r.period),
+        datasets: [
+          {
+            label: 'Revenue',
+            data: data.map(r => parseFloat(r.revenue)),
+            backgroundColor: 'rgba(37,99,235,.18)', borderColor: '#2563EB',
+            borderWidth: 2, borderRadius: 4, yAxisID: 'y',
+          },
+          {
+            label: 'Orders',
+            data: data.map(r => r.order_count),
+            type: 'line', borderColor: '#16A34A', backgroundColor: 'transparent',
+            tension: 0.4, pointRadius: 3, borderWidth: 2, yAxisID: 'y1',
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } } },
+        scales: {
+          y:  { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } },
+          y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { stepSize: 1 } },
+          x:  { grid: { display: false } }
+        }
+      }
+    });
+
+    // Table
+    let totalOrders = 0, totalRevenue = 0;
+    tbody.innerHTML = data.map(r => {
+      totalOrders  += Number(r.order_count);
+      totalRevenue += parseFloat(r.revenue);
+      const avg = r.order_count > 0 ? (parseFloat(r.revenue) / r.order_count) : 0;
+      return `<tr>
+        <td class="font-500">${r.period}</td>
+        <td style="text-align:right">${r.order_count}</td>
+        <td style="text-align:right;color:var(--brand);font-weight:500">${formatCurrency(r.revenue)}</td>
+        <td style="text-align:right;color:var(--text-2)">${formatCurrency(avg)}</td>
+      </tr>`;
+    }).join('') + `
+    <tr style="background:var(--surface-2);font-weight:600;border-top:2px solid var(--border)">
+      <td>Total</td>
+      <td style="text-align:right">${totalOrders}</td>
+      <td style="text-align:right;color:var(--brand)">${formatCurrency(totalRevenue)}</td>
+      <td style="text-align:right">${totalOrders > 0 ? formatCurrency(totalRevenue/totalOrders) : '—'}</td>
+    </tr>`;
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--red)">Failed to load report</td></tr>`;
+  }
+}
+
+function exportSalesCSV() {
+  const rows = document.querySelectorAll('#sr-tbody tr:not(:last-child)');
+  if (!rows.length) { toast('No data to export', 'warning'); return; }
+  let csv = 'Period,Orders,Revenue\n';
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length >= 3) {
+      const period  = cells[0].textContent.trim();
+      const orders  = cells[1].textContent.trim();
+      const revenue = cells[2].textContent.replace(/[৳\s,]/g, '').trim();
+      csv += `"${period}","${orders}","${revenue}"\n`;
+    }
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `sales-report-${document.getElementById('sr-from').value}-${document.getElementById('sr-to').value}.csv`
+  });
+  a.click();
+  toast('CSV exported', 'success');
+}
+
+// ── Inventory Report ──────────────────────────────────────────
+async function loadInventoryReport() {
+  try {
+    const { data } = await api.analytics.inventoryReport();
+    allInvRows = data;
+    renderInvReport(data);
+
+    const out  = data.filter(r => r.stock_status === 'out_of_stock').length;
+    const low  = data.filter(r => r.stock_status === 'low').length;
+    const ok   = data.filter(r => r.stock_status === 'ok').length;
+    const totalVal = data.reduce((s, r) => s + parseFloat(r.stock_value || 0), 0);
+
+    document.getElementById('inv-kpi-row').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value">${data.length}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Stock Value</div>
+        <div class="stat-value" style="font-size:1.1rem;color:var(--brand)">${formatCurrency(totalVal)}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Out of Stock</div>
+        <div class="stat-value" style="color:var(--red)">${out}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Low Stock</div>
+        <div class="stat-value" style="color:var(--yellow)">${low}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Well Stocked</div>
+        <div class="stat-value" style="color:var(--green)">${ok}</div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('inv-tbody').innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--red)">Failed to load</td></tr>`;
+  }
+}
+
+function filterInvReport() {
+  const filter = document.getElementById('inv-status-filter').value;
+  const filtered = filter ? allInvRows.filter(r => r.stock_status === filter) : allInvRows;
+  document.getElementById('inv-report-title').textContent = `Inventory Status (${filtered.length})`;
+  renderInvReport(filtered);
+}
+
+function renderInvReport(rows) {
+  const tbody = document.getElementById('inv-tbody');
+  document.getElementById('inv-report-title').textContent = `Inventory Status (${rows.length})`;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>No products match this filter</p></div></td></tr>`;
+    return;
+  }
+  const statusColor = { out_of_stock: 'badge-red', low: 'badge-yellow', ok: 'badge-green' };
+  const statusLabel = { out_of_stock: 'Out of Stock', low: 'Low Stock', ok: 'In Stock' };
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="font-500">${r.name}</td>
+      <td><code style="font-size:.76rem;background:var(--surface-2);padding:.1rem .35rem;border-radius:4px">${r.sku}</code></td>
+      <td class="text-sm text-2">${r.category || '—'}</td>
+      <td style="text-align:right;font-weight:500;color:${r.stock_qty <= 0 ? 'var(--red)' : r.stock_qty <= r.min_stock_qty ? 'var(--yellow)' : 'var(--text)'}">${r.stock_qty}</td>
+      <td style="text-align:right;color:var(--text-3)">${r.min_stock_qty}</td>
+      <td style="text-align:right;color:var(--text-2)">${formatCurrency(r.cost_price)}</td>
+      <td style="text-align:right;color:var(--text-2)">${formatCurrency(r.selling_price)}</td>
+      <td style="text-align:right;font-weight:500;color:var(--brand)">${formatCurrency(r.stock_value)}</td>
+      <td><span class="badge ${statusColor[r.stock_status]}">${statusLabel[r.stock_status]}</span></td>
+    </tr>`).join('');
+}
+
+// ── Init ──────────────────────────────────────────────────────
+loadOverview();
+</script>
+</body>
+</html>
