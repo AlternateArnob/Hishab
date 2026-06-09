@@ -57,25 +57,19 @@
         </svg>
         Inventory
       </a>
-      <a class="nav-item" href="accounting.html">
+      <a class="nav-item" href="accounting.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <line x1="12" y1="1" x2="12" y2="23"/>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
         </svg>
         Accounting
       </a>
-      <a class="nav-item" href="analytics.html">
+      <a class="nav-item" href="analytics.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
           <line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/>
         </svg>
         Analytics
-      </a>
-      
-      <div class="nav-section-label">Admin</div>
-      <a class="nav-item" href="users.html">
-        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
-        Users
       </a>
     </nav>
 
@@ -213,6 +207,11 @@ const chartOpts = {
 let revenueChart, monthlyChart, customerChart;
 
 async function loadDashboard() {
+  // Staff get a simplified dashboard — they cannot call the analytics API
+  if (isStaff()) {
+    loadStaffDashboard();
+    return;
+  }
   try {
     const { data } = await api.analytics.dashboard();
     renderKPIs(data.kpi);
@@ -222,6 +221,68 @@ async function loadDashboard() {
     renderTopProducts(data.topProducts);
   } catch (err) {
     toast('Failed to load dashboard data', 'error');
+  }
+}
+
+async function loadStaffDashboard() {
+  // Staff dashboard: fetch only what staff can access (CRM stats + inventory stats + sales stats)
+  try {
+    const [crmRes, invRes, salesRes] = await Promise.all([
+      api.crm.stats(),
+      api.inventory.stats(),
+      api.sales.stats(),
+    ]);
+    const crm   = crmRes.data   || {};
+    const inv   = invRes.data   || {};
+    const sales = salesRes.data || {};
+
+    // Replace KPI grid with staff-appropriate cards
+    document.getElementById('kpi-grid').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#F0FDF4;font-size:1.1rem">👥</div>
+        <div class="kpi-label">Total Customers</div>
+        <div class="kpi-value">${crm.total || 0}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#FFFBEB;font-size:1.1rem">📋</div>
+        <div class="kpi-label">Open Orders</div>
+        <div class="kpi-value">${(sales.draft || 0) + (sales.confirmed || 0)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#EFF6FF;font-size:1.1rem">📦</div>
+        <div class="kpi-label">Total Products</div>
+        <div class="kpi-value">${inv.total_products || 0}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#FFF7ED;font-size:1.1rem">⚠️</div>
+        <div class="kpi-label">Low Stock</div>
+        <div class="kpi-value" style="color:${(inv.low_stock || 0) > 0 ? 'var(--red)' : 'var(--green)'}">${inv.low_stock || 0}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#F0FDF4;font-size:1.1rem">✅</div>
+        <div class="kpi-label">Delivered Orders</div>
+        <div class="kpi-value">${sales.delivered || 0}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:#F5F3FF;font-size:1.1rem">🏷️</div>
+        <div class="kpi-label">New Leads</div>
+        <div class="kpi-value">${crm.leads || 0}</div>
+      </div>`;
+
+    // Hide the charts section — staff don't have revenue data
+    const chartsGrid = document.querySelector('.dashboard-grid');
+    if (chartsGrid) {
+      chartsGrid.innerHTML = `
+        <div class="card" style="grid-column:1/-1">
+          <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
+            <svg width="40" height="40" fill="none" stroke="var(--text-3)" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 1rem"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
+            <p class="font-500" style="margin-bottom:.35rem">Revenue & Analytics charts</p>
+            <p class="text-sm text-3">These reports are available to managers and admins.<br>Contact your admin if you need access.</p>
+          </div>
+        </div>`;
+    }
+  } catch(err) {
+    toast('Failed to load dashboard', 'error');
   }
 }
 
