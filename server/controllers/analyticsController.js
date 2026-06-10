@@ -113,17 +113,24 @@ exports.track = async (req, res) => {
 exports.insights = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { range = '30' } = req.query;
+    const { range = '30', action_type = '' } = req.query;
     const days = [7, 30, 90].includes(Number(range)) ? Number(range) : 30;
+
+    const validActions = ['view','create','edit','delete','login','export','report'];
+    const actionFilter = validActions.includes(action_type) ? action_type : '';
+
+    // Build optional action_type WHERE clause fragment
+    const actionWhere = actionFilter ? ' AND action_type = ?' : '';
+    const baseParams  = actionFilter ? [userId, days, actionFilter] : [userId, days];
 
     const [activityByDay] = await db.query(
       `SELECT DATE(created_at) AS date, COUNT(*) AS total,
               SUM(status = 'success') AS successes,
               SUM(status = 'error')   AS errors
        FROM user_history
-       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)${actionWhere}
        GROUP BY DATE(created_at) ORDER BY date ASC`,
-      [userId, days]
+      baseParams
     );
 
     const [actionBreakdown] = await db.query(
@@ -135,23 +142,26 @@ exports.insights = async (req, res) => {
     );
 
     const [sectionBreakdown] = await db.query(
-      `SELECT section, COUNT(*) AS count
+      `SELECT section, COUNT(*) AS count,
+              RANK() OVER (ORDER BY COUNT(*) DESC) AS rank_pos
        FROM user_history
-       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)${actionWhere}
        GROUP BY section ORDER BY count DESC`,
-      [userId, days]
+      baseParams
     );
 
     const [hourlyActivity] = await db.query(
       `SELECT HOUR(created_at) AS hour, COUNT(*) AS count
        FROM user_history
-       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)${actionWhere}
        GROUP BY HOUR(created_at) ORDER BY hour ASC`,
-      [userId, days]
+      baseParams
     );
 
+    // Weekly trend (last 8 weeks) — unfiltered by action for full picture
     const [weeklyTrend] = await db.query(
       `SELECT DATE_FORMAT(created_at, '%Y-%u') AS week,
+              MIN(DATE(created_at)) AS week_start,
               COUNT(*) AS total_actions,
               COUNT(DISTINCT DATE(created_at)) AS active_days
        FROM user_history
@@ -160,6 +170,20 @@ exports.insights = async (req, res) => {
       [userId]
     );
 
+    // Monthly trend (last 6 months) — unfiltered by action for full picture
+    const [monthlyTrend] = await db.query(
+      `SELECT DATE_FORMAT(created_at, '%Y-%m') AS month,
+              COUNT(*) AS total_actions,
+              COUNT(DISTINCT DATE(created_at)) AS active_days,
+              SUM(status = 'success') AS successes,
+              SUM(status = 'error')   AS errors
+       FROM user_history
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+       GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC`,
+      [userId]
+    );
+
+    // Current period summary
     const [[summary]] = await db.query(
       `SELECT
          COUNT(*)                           AS total_actions,
@@ -169,20 +193,25 @@ exports.insights = async (req, res) => {
          COUNT(DISTINCT section)            AS sections_visited,
          COUNT(DISTINCT item_id)            AS unique_items_interacted
        FROM user_history
-       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)`,
-      [userId, days]
+       WHERE user_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)${actionWhere}`,
+      baseParams
     );
 
     const peakHour = hourlyActivity.reduce((best, h) => (!best || h.count > best.count) ? h : best, null)?.hour ?? null;
 
+    // Previous period for trend comparison
+    const prevParams = actionFilter
+      ? [userId, days * 2, days, actionFilter]
+      : [userId, days * 2, days];
     const [[prevSummary]] = await db.query(
       `SELECT COUNT(*) AS total_actions FROM user_history
        WHERE user_id = ?
          AND created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
-         AND created_at <  DATE_SUB(NOW(), INTERVAL ? DAY)`,
-      [userId, days * 2, days]
+         AND created_at <  DATE_SUB(NOW(), INTERVAL ? DAY)${actionWhere}`,
+      prevParams
     );
 
+    // Recent feed — always unfiltered so you see true latest
     const [recentActivity] = await db.query(
       `SELECT id, action_type, section, item_label, api_method, api_path, status, created_at
        FROM user_history WHERE user_id = ?
@@ -199,12 +228,14 @@ exports.insights = async (req, res) => {
           most_visited_section: sectionBreakdown[0]?.section     || null,
           peak_hour:            peakHour,
           prev_total_actions:   prevSummary.total_actions || 0,
+          active_filter:        actionFilter || null,
         },
         activityByDay,
         actionBreakdown,
         sectionBreakdown,
         hourlyActivity,
         weeklyTrend,
+        monthlyTrend,
         recentActivity,
       }
     });
