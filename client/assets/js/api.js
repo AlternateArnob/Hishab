@@ -13,18 +13,34 @@ async function request(method, path, body = null) {
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
 
-  const res = await fetch(`${BASE}${path}`, opts);
+  let status = 'success';
+  try {
+    const res = await fetch(`${BASE}${path}`, opts);
 
-  if (res.status === 401) {
-    localStorage.removeItem('hishab_token');
-    localStorage.removeItem('hishab_user');
-    window.location.href = '/pages/login.html';
-    return;
+    if (res.status === 401) {
+      status = 'error';
+      if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, status);
+      localStorage.removeItem('hishab_token');
+      localStorage.removeItem('hishab_user');
+      window.location.href = '/pages/login.html';
+      return;
+    }
+
+    const data = await res.json();
+    if (!res.ok) {
+      status = 'error';
+      if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, status);
+      throw new Error(data.message || 'Request failed');
+    }
+
+    if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, status);
+    return data;
+  } catch (err) {
+    if (status === 'success') { // fetch-level error (network)
+      if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, 'error');
+    }
+    throw err;
   }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
 }
 
 const api = {

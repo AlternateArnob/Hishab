@@ -6,6 +6,10 @@ require('dotenv').config();
 const app = express();
 
 // ── Middleware ────────────────────────────────────────────────
+// Custom logger middleware
+const logger = require('./middleware/logger');
+app.use(logger);
+
 app.use(cors({ origin: '*', methods: ['GET','POST','PUT','DELETE'] }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +37,7 @@ app.get('*', (req, res) => {
 // ── Global error handler ──────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(5001).json({ success: false, message: 'Internal server error' });
+  res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
 module.exports = app;
