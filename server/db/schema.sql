@@ -272,3 +272,57 @@ INSERT INTO categories (name, description) VALUES
 ('Electronics', 'Electronic items and accessories'),
 ('Stationery',  'Office and stationery supplies'),
 ('Services',    'Service-based offerings');
+
+--SET FOREIGN_KEY_CHECKS = 0;
+
+-- ── Drop if re-running ────────────────────────────────────────
+DROP TABLE IF EXISTS user_analytics_summary;
+DROP TABLE IF EXISTS user_history;
+
+-- ============================================================
+--  TABLE: user_history
+--  Every API action taken by a logged-in user is persisted here.
+--  Populated by the server-side activityMiddleware.
+-- ============================================================
+CREATE TABLE user_history (
+  id              INT           NOT NULL AUTO_INCREMENT,
+  user_id         INT           NOT NULL,
+  action          VARCHAR(100)  NOT NULL,          -- e.g. "Create Order"
+  action_type     ENUM('view','create','edit','delete','other') NOT NULL DEFAULT 'other',
+  section         VARCHAR(60)   NOT NULL,           -- e.g. "sales", "crm"
+  method          VARCHAR(10)   NOT NULL,           -- GET / POST / PUT / PATCH / DELETE
+  endpoint        VARCHAR(255)  NOT NULL,           -- /api/sales/orders (no query string)
+  status          ENUM('success','error') NOT NULL DEFAULT 'success',
+  created_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  INDEX idx_uh_user       (user_id),
+  INDEX idx_uh_created    (created_at),
+  INDEX idx_uh_section    (section),
+  INDEX idx_uh_action_type(action_type),
+  CONSTRAINT fk_uh_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+--  TABLE: user_analytics_summary
+--  Pre-aggregated summary per user per calendar month.
+--  Recomputed on demand via POST /api/activity-analytics/recalculate
+-- ============================================================
+CREATE TABLE user_analytics_summary (
+  id                        INT           NOT NULL AUTO_INCREMENT,
+  user_id                   INT           NOT NULL,
+  period                    VARCHAR(7)    NOT NULL,  -- "YYYY-MM"
+  total_actions             INT           NOT NULL DEFAULT 0,
+  successful_actions        INT           NOT NULL DEFAULT 0,
+  error_actions             INT           NOT NULL DEFAULT 0,
+  most_common_action        VARCHAR(100)  DEFAULT NULL,
+  most_common_action_type   ENUM('view','create','edit','delete','other') DEFAULT NULL,
+  top_section               VARCHAR(60)   DEFAULT NULL,
+  unique_items_interacted   INT           NOT NULL DEFAULT 0,   -- distinct endpoints hit
+  unique_sections_visited   INT           NOT NULL DEFAULT 0,
+  last_calculated_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_summary_user_period (user_id, period),
+  CONSTRAINT fk_uas_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;
