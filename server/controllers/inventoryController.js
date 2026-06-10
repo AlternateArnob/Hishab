@@ -70,14 +70,14 @@ exports.create = async (req, res) => {
       `INSERT INTO products (name, sku, category_id, description, unit, cost_price, selling_price, stock_qty, min_stock_qty, created_by)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [name, sku, category_id || null, description, unit || 'pcs',
-       cost_price || 0, selling_price || 0, stock_qty || 0, min_stock_qty || 0, req.user.id]
+       Number(cost_price) || 0, Number(selling_price) || 0, Number(stock_qty) || 0, Number(min_stock_qty) || 0, req.user.id]
     );
 
     // Log initial stock
-    if (stock_qty > 0) {
+    if (Number(stock_qty) > 0) {
       await db.query(
         'INSERT INTO stock_movements (product_id, type, qty, reference, note, created_by) VALUES (?, ?, ?, ?, ?, ?)',
-        [result.insertId, 'in', stock_qty, 'INITIAL', 'Initial stock on product creation', req.user.id]
+        [result.insertId, 'in', Number(stock_qty), 'INITIAL', 'Initial stock on product creation', req.user.id]
       );
     }
 
@@ -96,7 +96,9 @@ exports.update = async (req, res) => {
     await db.query(
       `UPDATE products SET name=?, sku=?, category_id=?, description=?, unit=?,
        cost_price=?, selling_price=?, min_stock_qty=?, is_active=? WHERE id=?`,
-      [name, sku, category_id || null, description, unit, cost_price, selling_price, min_stock_qty, is_active !== false ? 1 : 0, req.params.id]
+      [name, sku, category_id || null, description, unit,
+       Number(cost_price), Number(selling_price), Number(min_stock_qty),
+       is_active !== false ? 1 : 0, req.params.id]
     );
     return res.json({ success: true, message: 'Product updated' });
   } catch (err) {
@@ -115,7 +117,7 @@ exports.adjustStock = async (req, res) => {
     const [[product]] = await conn.query('SELECT stock_qty FROM products WHERE id = ? FOR UPDATE', [req.params.id]);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
-    let newQty = product.stock_qty;
+    let newQty = Number(product.stock_qty);
     if (type === 'in')         newQty += Number(qty);
     else if (type === 'out')   newQty -= Number(qty);
     else                       newQty  = Number(qty);  // adjustment = set to value
