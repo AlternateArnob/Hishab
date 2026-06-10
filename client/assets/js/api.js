@@ -34,10 +34,12 @@ async function request(method, path, body = null) {
     }
 
     if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, status);
+    if (typeof ActivityTracker !== 'undefined') ActivityTracker.send(method, path, status);
     return data;
   } catch (err) {
     if (status === 'success') { // fetch-level error (network)
       if (typeof ActivityLog !== 'undefined') ActivityLog.addEntry(method, path, 'error');
+      if (typeof ActivityTracker !== 'undefined') ActivityTracker.send(method, path, 'error');
     }
     throw err;
   }
@@ -109,5 +111,70 @@ const api = {
     dashboard:       ()       => api.get('/api/analytics/dashboard'),
     salesReport:     (q = '') => api.get(`/api/analytics/sales-report${q}`),
     inventoryReport: ()       => api.get('/api/analytics/inventory-report'),
+    insights:        (q = '') => api.get(`/api/analytics/insights${q}`),
+    track:           (data)   => api.post('/api/analytics/track', data),
+    recalculate:     ()       => api.post('/api/analytics/insights/recalculate'),
   },
 };
+
+// ── Activity tracker: sends events to the server ──────────────
+// Maps API method+path patterns to action_type and section
+const ActivityTracker = (() => {
+  const sectionMap = [
+    [/\/api\/crm/,         'crm'],
+    [/\/api\/sales/,       'sales'],
+    [/\/api\/inventory/,   'inventory'],
+    [/\/api\/accounting/,  'accounting'],
+    [/\/api\/analytics/,   'analytics'],
+    [/\/api\/auth/,        'users'],
+  ];
+
+  const actionMap = [
+    ['GET',    'view'],
+    ['POST',   'create'],
+    ['PUT',    'edit'],
+    ['PATCH',  'edit'],
+    ['DELETE', 'delete'],
+  ];
+
+  // Skip tracking internal tracking calls to avoid infinite loops
+  const skipPaths = ['/api/analytics/track', '/api/analytics/insights', '/api/auth/me'];
+
+  function resolveSection(path) {
+    for (const [pattern, section] of sectionMap) {
+      if (pattern.test(path)) return section;
+    }
+    return 'other';
+  }
+
+  function resolveAction(method, path) {
+    if (path.includes('/report') || path.includes('/dashboard')) return 'report';
+    if (path.includes('/export')) return 'export';
+    if (path.includes('/login'))  return 'login';
+    for (const [m, action] of actionMap) {
+      if (m === method) return action;
+    }
+    return 'view';
+  }
+
+  function send(method, path, status) {
+    const cleanPath = path.split('?')[0];
+    if (skipPaths.some(p => cleanPath.startsWith(p))) return;
+    const token = localStorage.getItem('hishab_token');
+    if (!token) return;
+    // fire-and-forget, don't await
+    fetch(`${BASE}/api/analytics/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        action_type: resolveAction(method, cleanPath),
+        section:     resolveSection(cleanPath),
+        api_method:  method,
+        api_path:    cleanPath,
+        status:      status,
+      })
+    }).catch(() => {}); // silently ignore tracking errors
+  }
+
+  return { send };
+})();
