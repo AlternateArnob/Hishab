@@ -12,6 +12,217 @@
     .kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1rem; margin-bottom:1.5rem; }
     .alert-dot { width:8px; height:8px; border-radius:50%; background:var(--red); flex-shrink:0; }
     .report-controls { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; padding:1rem 1.25rem; border-bottom:1px solid var(--border); }
+
+    /* ── Insights styles ── */
+    .ins-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: .9rem;
+      margin-bottom: 1.5rem;
+    }
+    .ins-kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .ins-kpi-label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: .3rem;
+    }
+    .ins-kpi-value {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+    .ins-kpi-sub {
+      font-size: .72rem;
+      color: var(--text-3);
+      margin-top: .3rem;
+    }
+    .ins-kpi-sub.up   { color: var(--green); }
+    .ins-kpi-sub.down { color: var(--red); }
+
+    .ins-charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 800px) { .ins-charts-grid { grid-template-columns: 1fr; } }
+
+    .ins-section-label {
+      font-size: .7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-3);
+      margin-bottom: .6rem;
+    }
+
+    /* Heatmap */
+    .heatmap-wrap {
+      display: flex;
+      gap: 3px;
+      flex-wrap: wrap;
+      padding: .5rem 0;
+    }
+    .heatmap-cell {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      background: var(--surface-2);
+      position: relative;
+      cursor: default;
+      transition: opacity .15s;
+    }
+    .heatmap-cell:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: #fff;
+      font-size: .68rem;
+      white-space: nowrap;
+      padding: 2px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .heatmap-hour-labels {
+      display: flex;
+      gap: 3px;
+      margin-top: 2px;
+    }
+    .heatmap-hour-labels span {
+      width: 28px;
+      font-size: .6rem;
+      color: var(--text-3);
+      text-align: center;
+    }
+
+    /* Section pills */
+    .section-pill-wrap { display: flex; flex-direction: column; gap: .5rem; }
+    .section-pill {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .section-pill-name {
+      font-size: .8rem;
+      font-weight: 500;
+      width: 90px;
+      flex-shrink: 0;
+      text-transform: capitalize;
+    }
+    .section-pill-bar-wrap {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .section-pill-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .5s ease;
+    }
+    .section-pill-count {
+      font-size: .75rem;
+      color: var(--text-3);
+      width: 36px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Action badge pills */
+    .action-badges { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .action-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .25rem .6rem;
+      border-radius: 100px;
+      font-size: .75rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .action-badge-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+    }
+
+    /* Recent feed */
+    .feed-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-icon {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .feed-name { font-size: .82rem; font-weight: 500; color: var(--text); }
+    .feed-meta { font-size: .72rem; color: var(--text-3); margin-top: 1px; }
+    .feed-ts   { font-size: .68rem; color: var(--text-3); margin-left: auto; flex-shrink: 0; }
+
+    /* Range pills */
+    .range-pills { display: flex; gap: .4rem; }
+    .range-pill {
+      padding: .25rem .75rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: .78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--t), color var(--t), border-color var(--t);
+      color: var(--text-2);
+    }
+    .range-pill.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+    .range-pill:hover:not(.active) { background: var(--surface-2); }
+
+    /* Summary table */
+    .summary-month-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .summary-month-table th {
+      text-align: left; padding: .5rem .75rem;
+      font-size: .7rem; font-weight: 600; letter-spacing: .05em;
+      text-transform: uppercase; color: var(--text-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-month-table td {
+      padding: .55rem .75rem; border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .summary-month-table tr:last-child td { border-bottom: none; }
+    .summary-month-table td:first-child { font-weight: 600; color: var(--text); }
+
+    .recalc-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .75rem 1rem; border-top: 1px solid var(--border);
+      background: var(--surface-2); border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .recalc-ts { font-size: .72rem; color: var(--text-3); }
   </style>
 </head>
 <body>
@@ -50,7 +261,7 @@
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><polyline points="2 20 22 20"/></svg>
         Analytics
       </a>
-          <div class="nav-section-label" data-role="admin,manager">Admin</div>
+      <div class="nav-section-label" data-role="admin,manager">Admin</div>
       <a class="nav-item" href="users.html" data-role="admin,manager">
         <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
         Users
@@ -78,6 +289,7 @@
       <div class="topbar-title">Analytics</div>
       <div class="topbar-breadcrumb">Business Reports &amp; Insights</div>
     </div>
+    <div class="topbar-actions" style="margin-left:auto"></div>
   </header>
 
   <main class="main-content">
@@ -87,11 +299,14 @@
       <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
       <button class="tab-btn" onclick="switchTab('sales-report', this)">Sales Report</button>
       <button class="tab-btn" onclick="switchTab('inventory-report', this)">Inventory Report</button>
+      <button class="tab-btn" onclick="switchTab('my-insights', this)">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:4px;vertical-align:-1px"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/></svg>
+        My Insights
+      </button>
     </div>
 
     <!-- OVERVIEW TAB -->
     <div id="tab-overview">
-      <!-- KPI row -->
       <div class="kpi-row" id="kpi-row">
         <div class="kpi-card"><div class="spinner"></div></div>
         <div class="kpi-card"><div class="spinner"></div></div>
@@ -100,8 +315,6 @@
         <div class="kpi-card"><div class="spinner"></div></div>
         <div class="kpi-card"><div class="spinner"></div></div>
       </div>
-
-      <!-- Charts 2-col -->
       <div class="dashboard-grid">
         <div class="card">
           <div class="card-header"><h3>Revenue — Last 30 Days</h3></div>
@@ -141,9 +354,7 @@
           </button>
         </div>
         <div class="card-body" style="padding-bottom:.5rem">
-          <div class="chart-container" style="height:240px">
-            <canvas id="sales-report-chart"></canvas>
-          </div>
+          <div class="chart-container" style="height:240px"><canvas id="sales-report-chart"></canvas></div>
         </div>
         <div class="table-wrap" style="border:none;border-radius:0">
           <table>
@@ -184,9 +395,7 @@
           <table>
             <thead>
               <tr>
-                <th>Product</th>
-                <th>SKU</th>
-                <th>Category</th>
+                <th>Product</th><th>SKU</th><th>Category</th>
                 <th style="text-align:right">In Stock</th>
                 <th style="text-align:right">Min Stock</th>
                 <th style="text-align:right">Cost Price</th>
@@ -203,6 +412,115 @@
       </div>
     </div>
 
+    <!-- MY INSIGHTS TAB -->
+    <div id="tab-my-insights" class="hidden">
+
+      <!-- Controls row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem">
+        <div>
+          <div style="font-size:1rem;font-weight:600;color:var(--text)">Your Activity Insights</div>
+          <div class="text-sm text-3">Personal usage patterns based on your activity history</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <div class="range-pills">
+            <button class="range-pill" onclick="setRange(7, this)">7 days</button>
+            <button class="range-pill active" onclick="setRange(30, this)">30 days</button>
+            <button class="range-pill" onclick="setRange(90, this)">90 days</button>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="recalc-btn" onclick="recalculate()" title="Recalculate monthly summaries">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Recalculate Stats
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="ins-kpi-grid" id="ins-kpi-grid">
+        <div class="ins-kpi"><div class="spinner"></div></div>
+        <div class="ins-kpi"><div class="spinner"></div></div>
+        <div class="ins-kpi"><div class="spinner"></div></div>
+        <div class="ins-kpi"><div class="spinner"></div></div>
+        <div class="ins-kpi"><div class="spinner"></div></div>
+        <div class="ins-kpi"><div class="spinner"></div></div>
+      </div>
+
+      <!-- Charts row 1: activity over time + section breakdown -->
+      <div class="ins-charts-grid">
+        <div class="card">
+          <div class="card-header"><h3>Activity Over Time</h3></div>
+          <div class="card-body">
+            <div class="chart-container" style="height:200px"><canvas id="ins-activity-chart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Sections Visited</h3></div>
+          <div class="card-body" id="ins-section-body">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts row 2: action breakdown + hourly heatmap -->
+      <div class="ins-charts-grid">
+        <div class="card">
+          <div class="card-header"><h3>Action Breakdown</h3></div>
+          <div class="card-body">
+            <div class="chart-container" style="height:200px"><canvas id="ins-action-chart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Activity by Hour of Day</h3></div>
+          <div class="card-body" id="ins-heatmap-body">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly trend + recent feed -->
+      <div class="ins-charts-grid" style="margin-bottom:1rem">
+        <div class="card">
+          <div class="card-header"><h3>Weekly Trend (Last 8 Weeks)</h3></div>
+          <div class="card-body">
+            <div class="chart-container" style="height:180px"><canvas id="ins-weekly-chart"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Recent Activity</h3></div>
+          <div class="card-body" id="ins-feed-body" style="max-height:300px;overflow-y:auto;padding-top:.25rem">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly summary table -->
+      <div class="card">
+        <div class="card-header" style="justify-content:space-between">
+          <h3>Monthly Summary Cache</h3>
+          <span class="text-sm text-3" id="recalc-note">Hit "Recalculate Stats" to refresh</span>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0">
+          <table class="summary-month-table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Total Actions</th>
+                <th>Most Used Action</th>
+                <th>Top Section</th>
+                <th>Active Days</th>
+                <th>Last Calculated</th>
+              </tr>
+            </thead>
+            <tbody id="ins-summary-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text-3)">Click "Recalculate Stats" to generate monthly summaries</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="recalc-row" id="recalc-row" style="display:none">
+          <span class="recalc-ts" id="recalc-ts"></span>
+        </div>
+      </div>
+
+    </div><!-- /tab-my-insights -->
   </main>
 </div>
 
@@ -220,10 +538,10 @@ Chart.defaults.font.family = "'DM Sans', sans-serif";
 Chart.defaults.font.size   = 12;
 Chart.defaults.color       = '#94A3B8';
 
-let srChartInstance = null;
-let allInvRows = [];
+let srChartInstance = null, allInvRows = [];
+let insRange = 30;
+let insActivityChart = null, insActionChart = null, insWeeklyChart = null;
 
-// Default date range for sales report: last 6 months
 const today     = new Date().toISOString().split('T')[0];
 const sixMonths = new Date(Date.now() - 180 * 86400000).toISOString().split('T')[0];
 document.getElementById('sr-from').value = sixMonths;
@@ -233,20 +551,56 @@ document.getElementById('sr-to').value   = today;
 function switchTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  ['overview','sales-report','inventory-report'].forEach(t => {
+  ['overview','sales-report','inventory-report','my-insights'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
   });
   if (tab === 'sales-report' && !srChartInstance) loadSalesReport();
   if (tab === 'inventory-report' && !allInvRows.length) loadInventoryReport();
+  if (tab === 'my-insights') loadInsights();
 }
 
-// ── Overview ──────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────
+function formatCurrency(v) {
+  return '৳' + (parseFloat(v) || 0).toLocaleString('en-BD', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function buildQuery(params) {
+  const q = Object.entries(params).filter(([,v]) => v).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  return q ? '?' + q : '';
+}
+
+function formatHour(h) {
+  if (h === 0) return '12am';
+  if (h === 12) return '12pm';
+  return h < 12 ? h + 'am' : (h - 12) + 'pm';
+}
+
+const SECTION_COLORS = {
+  crm:        '#2563EB',
+  sales:      '#16A34A',
+  inventory:  '#D97706',
+  accounting: '#7C3AED',
+  analytics:  '#0891B2',
+  users:      '#DB2777',
+  other:      '#94A3B8',
+};
+
+const ACTION_COLORS = {
+  view:   '#2563EB',
+  create: '#16A34A',
+  edit:   '#D97706',
+  delete: '#DC2626',
+  login:  '#7C3AED',
+  export: '#0891B2',
+  report: '#EC4899',
+};
+
+// ── OVERVIEW ─────────────────────────────────────────────────
 async function loadOverview() {
   try {
     const { data } = await api.analytics.dashboard();
     const { kpi, revenueByDay, revenueByMonth, topProducts, customerGrowth } = data;
 
-    // KPI cards
     document.getElementById('kpi-row').innerHTML = `
       <div class="kpi-card">
         <div class="kpi-label">Revenue This Month</div>
@@ -279,28 +633,10 @@ async function loadOverview() {
         <div class="kpi-trend">${kpi.low_stock_alerts > 0 ? 'Products need restocking' : 'All stocked'}</div>
       </div>`;
 
-    // Revenue by day chart
-    makeLineChart('revenue-day-chart',
-      revenueByDay.map(r => r.date),
-      revenueByDay.map(r => parseFloat(r.revenue)),
-      'Revenue', '#2563EB'
-    );
+    makeLineChart('revenue-day-chart', revenueByDay.map(r => r.date), revenueByDay.map(r => parseFloat(r.revenue)), 'Revenue', '#2563EB');
+    makeBarChart('revenue-month-chart', revenueByMonth.map(r => r.month), revenueByMonth.map(r => parseFloat(r.revenue)), 'Revenue', '#16A34A');
+    makeBarChart('customer-chart', customerGrowth.map(r => r.month), customerGrowth.map(r => r.new_customers), 'New Customers', '#7C3AED');
 
-    // Revenue by month chart
-    makeBarChart('revenue-month-chart',
-      revenueByMonth.map(r => r.month),
-      revenueByMonth.map(r => parseFloat(r.revenue)),
-      'Revenue', '#16A34A'
-    );
-
-    // Customer growth
-    makeBarChart('customer-chart',
-      customerGrowth.map(r => r.month),
-      customerGrowth.map(r => r.new_customers),
-      'New Customers', '#7C3AED'
-    );
-
-    // Top products table
     const tp = document.getElementById('top-products-body');
     if (!topProducts.length) {
       tp.innerHTML = `<div class="empty-state"><p>No sales data yet</p></div>`;
@@ -320,7 +656,6 @@ async function loadOverview() {
           </div>
         </div>`).join('');
     }
-
   } catch(e) {
     document.getElementById('kpi-row').innerHTML = `<div class="kpi-card"><p class="text-sm" style="color:var(--red)">Failed to load analytics</p></div>`;
   }
@@ -328,103 +663,53 @@ async function loadOverview() {
 
 function makeLineChart(canvasId, labels, data, label, color) {
   if (!labels.length) return;
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  new Chart(ctx, {
+  new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label, data,
-        borderColor: color, backgroundColor: color + '18',
-        fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } },
-        x: { grid: { display: false } }
-      }
-    }
+    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '18', fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } }, x: { grid: { display: false } } } }
   });
 }
 
 function makeBarChart(canvasId, labels, data, label, color) {
   if (!labels.length) return;
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  new Chart(ctx, {
+  new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label, data,
-        backgroundColor: color + '22', borderColor: color,
-        borderWidth: 2, borderRadius: 5,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, ticks: { callback: v => label === 'New Customers' ? v : ('৳' + v.toLocaleString()) }, grid: { color: 'rgba(226,232,240,.6)' } },
-        x: { grid: { display: false } }
-      }
-    }
+    data: { labels, datasets: [{ label, data, backgroundColor: color + '22', borderColor: color, borderWidth: 2, borderRadius: 5 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => label === 'New Customers' ? v : ('৳' + v.toLocaleString()) }, grid: { color: 'rgba(226,232,240,.6)' } }, x: { grid: { display: false } } } }
   });
 }
 
-// ── Sales Report ──────────────────────────────────────────────
+// ── SALES REPORT ─────────────────────────────────────────────
 async function loadSalesReport() {
-  const from     = document.getElementById('sr-from').value;
-  const to       = document.getElementById('sr-to').value;
+  const from = document.getElementById('sr-from').value;
+  const to   = document.getElementById('sr-to').value;
   const group_by = document.getElementById('sr-group').value;
-  const tbody    = document.getElementById('sr-tbody');
+  const tbody = document.getElementById('sr-tbody');
   tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:1.5rem"><div class="spinner"></div></td></tr>`;
-
   try {
     const { data } = await api.analytics.salesReport(buildQuery({ from, to, group_by }));
-
     if (!data.length) {
       tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><p>No sales data for this period</p></div></td></tr>`;
       if (srChartInstance) { srChartInstance.destroy(); srChartInstance = null; }
       return;
     }
-
-    // Chart
     if (srChartInstance) srChartInstance.destroy();
     const ctx = document.getElementById('sales-report-chart').getContext('2d');
     srChartInstance = new Chart(ctx, {
       type: 'bar',
-      data: {
-        labels: data.map(r => r.period),
+      data: { labels: data.map(r => r.period),
         datasets: [
-          {
-            label: 'Revenue',
-            data: data.map(r => parseFloat(r.revenue)),
-            backgroundColor: 'rgba(37,99,235,.18)', borderColor: '#2563EB',
-            borderWidth: 2, borderRadius: 4, yAxisID: 'y',
-          },
-          {
-            label: 'Orders',
-            data: data.map(r => r.order_count),
-            type: 'line', borderColor: '#16A34A', backgroundColor: 'transparent',
-            tension: 0.4, pointRadius: 3, borderWidth: 2, yAxisID: 'y1',
-          }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
+          { label: 'Revenue', data: data.map(r => parseFloat(r.revenue)), backgroundColor: 'rgba(37,99,235,.18)', borderColor: '#2563EB', borderWidth: 2, borderRadius: 4, yAxisID: 'y' },
+          { label: 'Orders', data: data.map(r => r.order_count), type: 'line', borderColor: '#16A34A', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2, yAxisID: 'y1' }
+        ]},
+      options: { responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } } },
-        scales: {
-          y:  { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } },
+        scales: { y: { beginAtZero: true, ticks: { callback: v => '৳' + v.toLocaleString() }, grid: { color: 'rgba(226,232,240,.6)' } },
           y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { stepSize: 1 } },
-          x:  { grid: { display: false } }
-        }
-      }
+          x: { grid: { display: false } } } }
     });
-
-    // Table
     let totalOrders = 0, totalRevenue = 0;
     tbody.innerHTML = data.map(r => {
       totalOrders  += Number(r.order_count);
@@ -455,54 +740,33 @@ function exportSalesCSV() {
   rows.forEach(row => {
     const cells = row.querySelectorAll('td');
     if (cells.length >= 3) {
-      const period  = cells[0].textContent.trim();
-      const orders  = cells[1].textContent.trim();
-      const revenue = cells[2].textContent.replace(/[৳\s,]/g, '').trim();
-      csv += `"${period}","${orders}","${revenue}"\n`;
+      csv += `"${cells[0].textContent.trim()}","${cells[1].textContent.trim()}","${cells[2].textContent.replace(/[৳\s,]/g, '').trim()}"\n`;
     }
   });
-  const blob = new Blob([csv], { type: 'text/csv' });
   const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(blob),
+    href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })),
     download: `sales-report-${document.getElementById('sr-from').value}-${document.getElementById('sr-to').value}.csv`
   });
   a.click();
   toast('CSV exported', 'success');
 }
 
-// ── Inventory Report ──────────────────────────────────────────
+// ── INVENTORY REPORT ─────────────────────────────────────────
 async function loadInventoryReport() {
   try {
     const { data } = await api.analytics.inventoryReport();
     allInvRows = data;
     renderInvReport(data);
-
-    const out  = data.filter(r => r.stock_status === 'out_of_stock').length;
-    const low  = data.filter(r => r.stock_status === 'low').length;
-    const ok   = data.filter(r => r.stock_status === 'ok').length;
+    const out = data.filter(r => r.stock_status === 'out_of_stock').length;
+    const low = data.filter(r => r.stock_status === 'low').length;
+    const ok  = data.filter(r => r.stock_status === 'ok').length;
     const totalVal = data.reduce((s, r) => s + parseFloat(r.stock_value || 0), 0);
-
     document.getElementById('inv-kpi-row').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-label">Total Products</div>
-        <div class="stat-value">${data.length}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Stock Value</div>
-        <div class="stat-value" style="font-size:1.1rem;color:var(--brand)">${formatCurrency(totalVal)}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Out of Stock</div>
-        <div class="stat-value" style="color:var(--red)">${out}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Low Stock</div>
-        <div class="stat-value" style="color:var(--yellow)">${low}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Well Stocked</div>
-        <div class="stat-value" style="color:var(--green)">${ok}</div>
-      </div>`;
+      <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-value">${data.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Stock Value</div><div class="stat-value" style="font-size:1.1rem;color:var(--brand)">${formatCurrency(totalVal)}</div></div>
+      <div class="stat-card"><div class="stat-label">Out of Stock</div><div class="stat-value" style="color:var(--red)">${out}</div></div>
+      <div class="stat-card"><div class="stat-label">Low Stock</div><div class="stat-value" style="color:var(--yellow)">${low}</div></div>
+      <div class="stat-card"><div class="stat-label">Well Stocked</div><div class="stat-value" style="color:var(--green)">${ok}</div></div>`;
   } catch(e) {
     document.getElementById('inv-tbody').innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--red)">Failed to load</td></tr>`;
   }
@@ -511,17 +775,13 @@ async function loadInventoryReport() {
 function filterInvReport() {
   const filter = document.getElementById('inv-status-filter').value;
   const filtered = filter ? allInvRows.filter(r => r.stock_status === filter) : allInvRows;
-  document.getElementById('inv-report-title').textContent = `Inventory Status (${filtered.length})`;
   renderInvReport(filtered);
 }
 
 function renderInvReport(rows) {
   const tbody = document.getElementById('inv-tbody');
   document.getElementById('inv-report-title').textContent = `Inventory Status (${rows.length})`;
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>No products match this filter</p></div></td></tr>`;
-    return;
-  }
+  if (!rows.length) { tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>No products match this filter</p></div></td></tr>`; return; }
   const statusColor = { out_of_stock: 'badge-red', low: 'badge-yellow', ok: 'badge-green' };
   const statusLabel = { out_of_stock: 'Out of Stock', low: 'Low Stock', ok: 'In Stock' };
   tbody.innerHTML = rows.map(r => `
@@ -537,6 +797,249 @@ function renderInvReport(rows) {
       <td><span class="badge ${statusColor[r.stock_status]}">${statusLabel[r.stock_status]}</span></td>
     </tr>`).join('');
 }
+
+// ── MY INSIGHTS ───────────────────────────────────────────────
+function setRange(days, btn) {
+  insRange = days;
+  document.querySelectorAll('.range-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadInsights();
+}
+
+async function loadInsights() {
+  try {
+    const { data } = await api.analytics.insights(`?range=${insRange}`);
+    renderInsKPIs(data.summary);
+    renderInsActivityChart(data.activityByDay);
+    renderInsSectionBreakdown(data.sectionBreakdown);
+    renderInsActionChart(data.actionBreakdown);
+    renderInsHeatmap(data.hourlyActivity);
+    renderInsWeeklyChart(data.weeklyTrend);
+    renderInsFeed(data.recentActivity);
+  } catch(e) {
+    document.getElementById('ins-kpi-grid').innerHTML =
+      `<div class="ins-kpi"><p style="color:var(--red);font-size:.82rem">Failed to load insights</p></div>`;
+  }
+}
+
+function renderInsKPIs(s) {
+  const pct = s.prev_total_actions > 0
+    ? Math.round(((s.total_actions - s.prev_total_actions) / s.prev_total_actions) * 100)
+    : null;
+  const trendHtml = pct !== null
+    ? `<div class="ins-kpi-sub ${pct >= 0 ? 'up' : 'down'}">${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}% vs previous period</div>`
+    : `<div class="ins-kpi-sub">No prior data</div>`;
+
+  const successRate = s.total_actions > 0
+    ? Math.round((s.successful_actions / s.total_actions) * 100) : 100;
+
+  const peakLabel = s.peak_hour !== null ? formatHour(s.peak_hour) : '—';
+  const sectionCap = s.most_visited_section
+    ? s.most_visited_section.charAt(0).toUpperCase() + s.most_visited_section.slice(1) : '—';
+  const actionCap = s.most_common_action
+    ? s.most_common_action.charAt(0).toUpperCase() + s.most_common_action.slice(1) : '—';
+
+  document.getElementById('ins-kpi-grid').innerHTML = `
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Total Actions</div>
+      <div class="ins-kpi-value">${s.total_actions || 0}</div>
+      ${trendHtml}
+    </div>
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Active Days</div>
+      <div class="ins-kpi-value">${s.active_days || 0}</div>
+      <div class="ins-kpi-sub">out of ${insRange} days</div>
+    </div>
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Success Rate</div>
+      <div class="ins-kpi-value" style="color:${successRate >= 90 ? 'var(--green)' : 'var(--yellow)'}">${successRate}%</div>
+      <div class="ins-kpi-sub">${s.successful_actions || 0} succeeded · ${s.failed_actions || 0} failed</div>
+    </div>
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Sections Visited</div>
+      <div class="ins-kpi-value">${s.sections_visited || 0}</div>
+      <div class="ins-kpi-sub">of 6 modules</div>
+    </div>
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Top Action</div>
+      <div class="ins-kpi-value" style="font-size:1.2rem">${actionCap}</div>
+      <div class="ins-kpi-sub">Most performed</div>
+    </div>
+    <div class="ins-kpi">
+      <div class="ins-kpi-label">Peak Hour</div>
+      <div class="ins-kpi-value" style="font-size:1.2rem">${peakLabel}</div>
+      <div class="ins-kpi-sub">Most active time</div>
+    </div>`;
+}
+
+function renderInsActivityChart(data) {
+  if (insActivityChart) { insActivityChart.destroy(); insActivityChart = null; }
+  if (!data.length) return;
+  const ctx = document.getElementById('ins-activity-chart').getContext('2d');
+  insActivityChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(r => r.date),
+      datasets: [
+        { label: 'Success', data: data.map(r => Number(r.successes)), backgroundColor: 'rgba(22,163,74,.7)', borderRadius: 3, stack: 'a' },
+        { label: 'Error',   data: data.map(r => Number(r.errors)),    backgroundColor: 'rgba(220,38,38,.5)', borderRadius: 3, stack: 'a' },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 12 } } },
+      scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(226,232,240,.6)' } } } }
+  });
+}
+
+function renderInsSectionBreakdown(data) {
+  const el = document.getElementById('ins-section-body');
+  if (!data.length) { el.innerHTML = `<div class="empty-state"><p>No activity yet</p></div>`; return; }
+  const max = Math.max(...data.map(d => d.count));
+  el.innerHTML = `<div class="section-pill-wrap">${data.map(d => {
+    const color = SECTION_COLORS[d.section] || '#94A3B8';
+    const pct   = Math.round((d.count / max) * 100);
+    return `<div class="section-pill">
+      <span class="section-pill-name">${d.section}</span>
+      <div class="section-pill-bar-wrap">
+        <div class="section-pill-bar" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span class="section-pill-count">${d.count}</span>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderInsActionChart(data) {
+  if (insActionChart) { insActionChart.destroy(); insActionChart = null; }
+  if (!data.length) return;
+  const ctx = document.getElementById('ins-action-chart').getContext('2d');
+  const colors = data.map(d => ACTION_COLORS[d.action_type] || '#94A3B8');
+  insActionChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: data.map(d => d.action_type.charAt(0).toUpperCase() + d.action_type.slice(1)),
+      datasets: [{ data: data.map(d => d.count), backgroundColor: colors.map(c => c + 'CC'), borderColor: colors, borderWidth: 2 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 12, font: { size: 11 } } } },
+      cutout: '60%' }
+  });
+}
+
+function renderInsHeatmap(data) {
+  const el = document.getElementById('ins-heatmap-body');
+  const hourMap = {};
+  data.forEach(d => { hourMap[d.hour] = d.count; });
+  const maxCount = Math.max(1, ...data.map(d => d.count));
+
+  let cells = '', labels = '';
+  for (let h = 0; h < 24; h++) {
+    const count = hourMap[h] || 0;
+    const intensity = count / maxCount;
+    const alpha = count === 0 ? 0 : 0.12 + intensity * 0.85;
+    const bg = `rgba(37,99,235,${alpha.toFixed(2)})`;
+    cells += `<div class="heatmap-cell" style="background:${bg}" data-tip="${formatHour(h)}: ${count} actions"></div>`;
+    if (h % 3 === 0) labels += `<span>${formatHour(h)}</span>`;
+    else labels += `<span></span>`;
+  }
+  el.innerHTML = `
+    <div class="ins-section-label">Actions per hour (darker = more activity)</div>
+    <div class="heatmap-wrap">${cells}</div>
+    <div class="heatmap-hour-labels">${labels}</div>`;
+}
+
+function renderInsWeeklyChart(data) {
+  if (insWeeklyChart) { insWeeklyChart.destroy(); insWeeklyChart = null; }
+  if (!data.length) return;
+  const ctx = document.getElementById('ins-weekly-chart').getContext('2d');
+  insWeeklyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(r => 'Wk ' + r.week.split('-')[1]),
+      datasets: [
+        { label: 'Actions', data: data.map(r => r.total_actions), borderColor: '#2563EB', backgroundColor: 'rgba(37,99,235,.1)', fill: true, tension: 0.4, pointRadius: 3, borderWidth: 2, yAxisID: 'y' },
+        { label: 'Active Days', data: data.map(r => r.active_days), borderColor: '#16A34A', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2, borderDash: [4,3], yAxisID: 'y1' },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 12 } } },
+      scales: {
+        y:  { beginAtZero: true, grid: { color: 'rgba(226,232,240,.6)' }, ticks: { stepSize: 1 } },
+        y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { stepSize: 1, max: 7 } },
+        x:  { grid: { display: false } }
+      } }
+  });
+}
+
+function renderInsFeed(data) {
+  const el = document.getElementById('ins-feed-body');
+  if (!data.length) { el.innerHTML = `<div class="empty-state"><p>No activity yet</p></div>`; return; }
+  const iconMap = { view:'👁', create:'✚', edit:'✏', delete:'🗑', login:'🔑', export:'⬇', report:'📊' };
+  const colorMap = { view:'#2563EB22', create:'#16A34A22', edit:'#D9770622', delete:'#DC262622', login:'#7C3AED22', export:'#089122', report:'#EC489922' };
+
+  el.innerHTML = data.map(e => {
+    const d  = new Date(e.created_at);
+    const ts = d.toLocaleString('en-BD', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12: true });
+    const icon = iconMap[e.action_type] || '•';
+    const bg   = colorMap[e.action_type] || 'var(--surface-2)';
+    const label = e.item_label || e.api_path || e.section;
+    const statusDot = e.status === 'error' ? ' <span style="color:var(--red);font-size:.65rem">✕</span>' : '';
+    return `<div class="feed-item">
+      <div class="feed-icon" style="background:${bg}">${icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="feed-name" style="text-transform:capitalize">${e.action_type} · ${e.section}${statusDot}</div>
+        <div class="feed-meta" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
+      </div>
+      <div class="feed-ts">${ts}</div>
+    </div>`;
+  }).join('');
+}
+
+async function recalculate() {
+  const btn = document.getElementById('recalc-btn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="spin"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Calculating…`;
+  try {
+    const { data, recalculated } = await api.analytics.recalculate();
+    renderSummaryTable(data);
+    toast(`Recalculated ${recalculated} month${recalculated !== 1 ? 's' : ''}`, 'success');
+    document.getElementById('recalc-note').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+    document.getElementById('recalc-row').style.display = 'flex';
+    document.getElementById('recalc-ts').textContent = `Cache updated at ${new Date().toLocaleString()}`;
+  } catch(e) {
+    toast('Recalculation failed', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Recalculate Stats`;
+  }
+}
+
+function renderSummaryTable(data) {
+  const tbody = document.getElementById('ins-summary-tbody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:1.5rem;color:var(--text-3)">No monthly data found — use the app to generate history</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(r => {
+    const ts = r.last_calculated_at ? new Date(r.last_calculated_at).toLocaleString() : '—';
+    const actionCap = r.most_common_action
+      ? r.most_common_action.charAt(0).toUpperCase() + r.most_common_action.slice(1) : '—';
+    const sectionCap = r.most_visited_section
+      ? r.most_visited_section.charAt(0).toUpperCase() + r.most_visited_section.slice(1) : '—';
+    return `<tr>
+      <td>${r.period}</td>
+      <td style="font-weight:500">${r.total_actions}</td>
+      <td>${actionCap}</td>
+      <td>${sectionCap}</td>
+      <td>${r.active_days}</td>
+      <td style="color:var(--text-3);font-size:.78rem">${ts}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Spinner CSS for recalc button
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '.spin { animation: spin .8s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(spinStyle);
 
 // ── Init ──────────────────────────────────────────────────────
 loadOverview();
