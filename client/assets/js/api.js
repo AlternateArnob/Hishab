@@ -3,7 +3,10 @@
    Centralized fetch wrapper — attaches JWT, handles errors
    ============================================================ */
 
-const BASE = window.location.origin;
+const BASE =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:5000'
+    : 'https://hishab-pro.onrender.com';
 
 async function request(method, path, body = null) {
   const token = localStorage.getItem('hishab_token');
